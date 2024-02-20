@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &83532166 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6282162499579241999, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-  m_PrefabInstance: {fileID: 6688596835189152602}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &335742057
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,17 +414,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1599232064 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 450650765261287990, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-  m_PrefabInstance: {fileID: 6688596835189152602}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1670007000
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,7 +474,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7815a4ab831907549932b1f66ad217bf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -535,11 +519,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -28.543, y: 0, z: 0}
---- !u!4 &1872594873 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2458492826183092384, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-  m_PrefabInstance: {fileID: 6688596835189152602}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2102616827
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,46 +675,6 @@ PrefabInstance:
     - target: {fileID: 1860011352095450437, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 4118927973758723170, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-      propertyPath: PlayerInput
-      value: 
-      objectReference: {fileID: 1599232064}
-    - target: {fileID: 5026650091491368108, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-      propertyPath: Camera
-      value: 
-      objectReference: {fileID: 1872594873}
-    - target: {fileID: 5026650091491368108, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-      propertyPath: jumpForce
-      value: 260
-      objectReference: {fileID: 0}
-    - target: {fileID: 5026650091491368108, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-      propertyPath: CameraRoot
-      value: 
-      objectReference: {fileID: 83532166}
-    - target: {fileID: 5026650091491368108, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-      propertyPath: runSpeedAnim
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5026650091491368108, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-      propertyPath: walkSpeedAnim
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5026650091491368108, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-      propertyPath: distanceToGround
-      value: 0.95
-      objectReference: {fileID: 0}
-    - target: {fileID: 5026650091491368108, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-      propertyPath: groundCheck.m_Bits
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 5715280354397033079, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-      propertyPath: field of view
-      value: 70
-      objectReference: {fileID: 0}
-    - target: {fileID: 5715280354397033079, guid: 1012e27ebcb114943a6c1935c3433e13, type: 3}
-      propertyPath: near clip plane
-      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

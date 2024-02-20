@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     private int jumpHash;
     private int fallingHash;
     private int groundedHash;
+    private int crouchHash;
     private float xRotation; //cam rotation in x axis
     private const float walkSpeedAnim = 2f;
     private const float runSpeedAnim = 6f;
@@ -44,6 +45,7 @@ public class PlayerController : MonoBehaviour
         jumpHash = Animator.StringToHash("Jump");
         fallingHash = Animator.StringToHash("Falling");
         groundedHash = Animator.StringToHash("Grounded");
+        crouchHash = Animator.StringToHash("Crouch");
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -52,6 +54,7 @@ public class PlayerController : MonoBehaviour
         SampleGround();
         Move();
         HandleJump();
+        HandleCrouch();
     }
 
     private void LateUpdate() 
@@ -64,6 +67,7 @@ public class PlayerController : MonoBehaviour
         if(!hasAnimator) return;
 
         float targetSpeed = inputManager.Run ? runSpeedAnim : walkSpeedAnim;
+        if(inputManager.Crouch) targetSpeed = 1.5f;
         if(inputManager.Move == Vector2.zero) targetSpeed = .1f;
 
         if (grounded)
@@ -101,6 +105,11 @@ public class PlayerController : MonoBehaviour
         cam.localRotation  = Quaternion.Euler(xRotation, 0f, 0f);
         playerRb.MoveRotation(playerRb.rotation * Quaternion.Euler(0f, mouseX, 0f));
         this.transform.Rotate(Vector3.up, mouseX);
+    }
+
+    private void HandleCrouch()
+    {
+        animator.SetBool(crouchHash , inputManager.Crouch);
     }
 
     private void HandleJump()
