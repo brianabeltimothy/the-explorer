@@ -11,6 +11,7 @@ public class InputManager : MonoBehaviour
     public bool Run {get; private set;}
     public bool Jump {get; private set;}
     public bool Crouch {get; private set;}
+    public bool Inventory {get; private set;}
 
     private InputActionMap currentMap;
     private InputAction moveAction;
@@ -18,6 +19,7 @@ public class InputManager : MonoBehaviour
     private InputAction runAction;
     private InputAction jumpAction;
     private InputAction crouchAction;
+    private InputAction inventoryAction;
 
     private void Start() {
         currentMap = playerInput.currentActionMap;
@@ -26,18 +28,21 @@ public class InputManager : MonoBehaviour
         runAction = currentMap.FindAction("Run");
         jumpAction = currentMap.FindAction("Jump");
         crouchAction = currentMap.FindAction("Crouch");
+        inventoryAction = currentMap.FindAction("Inventory");
 
         moveAction.performed += onMove;
         lookAction.performed += onLook;
         runAction.performed += onRun;
         jumpAction.performed += onJump;
         crouchAction.performed += onCrouch;
+        inventoryAction.performed += onInventory;
 
         moveAction.canceled += onMove;
         lookAction.canceled += onLook;
         runAction.canceled += onRun;
         jumpAction.canceled += onJump;
         crouchAction.canceled += onCrouch;
+        inventoryAction.canceled += onInventory;
     }
 
     private void onMove(InputAction.CallbackContext context)
@@ -59,6 +64,10 @@ public class InputManager : MonoBehaviour
     private void onCrouch(InputAction.CallbackContext context)
     {
         Crouch = context.ReadValueAsButton();
+    }
+    private void onInventory(InputAction.CallbackContext context)
+    {
+        Inventory = context.ReadValueAsButton();
     }
 
     private void OnEnable() {

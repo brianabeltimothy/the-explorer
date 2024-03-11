@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float distanceToGround = 0.8f;
     [SerializeField] private LayerMask groundCheck;
     [SerializeField] private float airResistance = 0.8f;
+    private CapsuleCollider capsuleCollider;
+
     private Rigidbody playerRb;
     private InputManager inputManager;
     private Animator animator;
@@ -32,12 +34,17 @@ public class PlayerController : MonoBehaviour
     private const float walkSpeedAnim = 2f;
     private const float runSpeedAnim = 6f;
     private Vector2 currentVelocity;
+    private float crouchHeight = 1.6f;
+    private float standingHeight = 1.79f;
+    private Vector3 crouchCenterOffset = new Vector3(0f, 0.76f, 0f);
+    private Vector3 standingCenterOffset = new Vector3(0f, 0.89f, 0f);
 
     private void Awake() 
     {
         playerRb = GetComponent<Rigidbody>();
         inputManager = GetComponent<InputManager>();
         hasAnimator = TryGetComponent<Animator>(out animator);
+        capsuleCollider = GetComponent<CapsuleCollider>();
 
         xVelHash = Animator.StringToHash("X_Velocity");
         yVelHash = Animator.StringToHash("Y_Velocity");
@@ -46,7 +53,7 @@ public class PlayerController : MonoBehaviour
         fallingHash = Animator.StringToHash("Falling");
         groundedHash = Animator.StringToHash("Grounded");
         crouchHash = Animator.StringToHash("Crouch");
-        Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void FixedUpdate()
@@ -110,6 +117,16 @@ public class PlayerController : MonoBehaviour
     private void HandleCrouch()
     {
         animator.SetBool(crouchHash , inputManager.Crouch);
+        if (inputManager.Crouch)
+        {
+            capsuleCollider.height = crouchHeight;
+            capsuleCollider.center = crouchCenterOffset;
+        }
+        else
+        {
+            capsuleCollider.height = standingHeight;
+            capsuleCollider.center = standingCenterOffset;
+        }
     }
 
     private void HandleJump()
