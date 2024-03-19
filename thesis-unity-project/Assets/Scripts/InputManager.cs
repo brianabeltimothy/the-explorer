@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     public bool Jump {get; private set;}
     public bool Crouch {get; private set;}
     public bool Inventory {get; private set;}
+    public bool Interact {get; private set;}
 
     private InputActionMap currentMap;
     private InputAction moveAction;
@@ -20,6 +21,7 @@ public class InputManager : MonoBehaviour
     private InputAction jumpAction;
     private InputAction crouchAction;
     private InputAction inventoryAction;
+    private InputAction interactAction;
 
     private void Start() {
         currentMap = playerInput.currentActionMap;
@@ -29,6 +31,7 @@ public class InputManager : MonoBehaviour
         jumpAction = currentMap.FindAction("Jump");
         crouchAction = currentMap.FindAction("Crouch");
         inventoryAction = currentMap.FindAction("Inventory");
+        interactAction = currentMap.FindAction("Interact");
 
         moveAction.performed += onMove;
         lookAction.performed += onLook;
@@ -36,6 +39,7 @@ public class InputManager : MonoBehaviour
         jumpAction.performed += onJump;
         crouchAction.performed += onCrouch;
         inventoryAction.performed += onInventory;
+        interactAction.performed += onInteract;
 
         moveAction.canceled += onMove;
         lookAction.canceled += onLook;
@@ -43,6 +47,7 @@ public class InputManager : MonoBehaviour
         jumpAction.canceled += onJump;
         crouchAction.canceled += onCrouch;
         inventoryAction.canceled += onInventory;
+        interactAction.canceled += onInteract;
     }
 
     private void onMove(InputAction.CallbackContext context)
@@ -68,6 +73,15 @@ public class InputManager : MonoBehaviour
     private void onInventory(InputAction.CallbackContext context)
     {
         Inventory = context.ReadValueAsButton();
+    }
+    private void onInteract(InputAction.CallbackContext context)
+    {
+        Interact = context.ReadValueAsButton();
+    }
+
+    private void LateUpdate()
+    {
+        Inventory = false;
     }
 
     private void OnEnable() {
