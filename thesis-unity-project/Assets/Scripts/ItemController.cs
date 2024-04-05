@@ -12,7 +12,8 @@ public class ItemController : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        Destroy(gameObject);
         InventoryManager.Instance.Add(item);
+        //show the item for a sec
+        Destroy(gameObject);
     }
 }

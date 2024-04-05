@@ -9,9 +9,13 @@ interface IInteractable
 
 public class Interactor : MonoBehaviour
 {
-    [SerializeField] private float interactRange;
+    [SerializeField] private Material highlightMaterial;
+
+    [SerializeField] private Material defaultMaterial;
+    private Transform selectedObject;
     private InputManager inputManager;
     private Transform interactorSource;
+    [SerializeField] private float interactRange;
 
     void Start()
     {
@@ -21,12 +25,29 @@ public class Interactor : MonoBehaviour
 
     void Update()
     {
-        if(inputManager.Interact)
+        if(selectedObject != null)
         {
-            Ray r = new Ray(interactorSource.position, interactorSource.forward);
-            if(Physics.Raycast(r, out RaycastHit hitInfo, interactRange))
+            var selectionRenderer = selectedObject.GetComponent<Renderer>();
+            selectionRenderer.material = defaultMaterial;
+            selectedObject = null;
+        }
+
+        Ray r = new Ray(interactorSource.position, interactorSource.forward);
+        RaycastHit hitInfo;
+        if(Physics.Raycast(r, out hitInfo, interactRange))
+        {
+            if(hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj))
             {
-                if(hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj))
+                var selection = hitInfo.transform;
+                var selectionRenderer = selection.GetComponent<Renderer>();
+                if(selectionRenderer != null){
+                    defaultMaterial = selectionRenderer.material;
+                    selectionRenderer.material = highlightMaterial;
+                }
+
+                selectedObject = selection;
+
+                if(inputManager.Interact)
                 {
                     interactObj.Interact();
                 }

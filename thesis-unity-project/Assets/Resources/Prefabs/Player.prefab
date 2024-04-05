@@ -492,9 +492,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.36
-  m_Height: 1.79
+  m_Height: 1.6
   m_Direction: 1
-  m_Center: {x: 0, y: 0.89, z: 0}
+  m_Center: {x: 0, y: 0.76, z: 0}
 --- !u!114 &450650765261287990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1537,6 +1537,7 @@ GameObject:
   - component: {fileID: 2458492826183092384}
   - component: {fileID: 5715280354397033079}
   - component: {fileID: 4883527063689280877}
+  - component: {fileID: 1542395836570057325}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1618,6 +1619,21 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5378648915416796274}
   m_Enabled: 1
+--- !u!114 &1542395836570057325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5378648915416796274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b04fc124a847ec449067e293601190f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightMaterial: {fileID: 2100000, guid: 02729df1daa746f41b30cb52424f7277, type: 2}
+  defaultMaterial: {fileID: 0}
+  interactRange: 3
 --- !u!1 &5398776073885543593
 GameObject:
   m_ObjectHideFlags: 0

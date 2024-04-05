@@ -7,13 +7,17 @@ using TMPro;
 public class InventoryItemController : MonoBehaviour
 {
     public static InventoryItemController Instance;
+    public Item item;
 
-    // [SerializeField] private Sprite image;
-    // [SerializeField] private TMP_Text description;
-    // [SerializeField] private GameObject inventoryItem; 
+    //key item content
+    [SerializeField] private Image keyItemImage;
+    [SerializeField] private TMP_Text keyItemName;
+    [SerializeField] private TMP_Text keyItemDescription;
 
-    private Sprite itemImage;
-    private string itemDescription;
+    //artifact content
+    [SerializeField] private Image artifactImage;
+    [SerializeField] private TMP_Text artifactName;
+    [SerializeField] private TMP_Text artifactDescription;
 
     private void Awake() {
         Instance = this;
@@ -21,19 +25,59 @@ public class InventoryItemController : MonoBehaviour
 
     private void Start()
     {
+        //get key items content
+        keyItemDescription = GameObject.Find("Canvas/Inventory/Tab Content/Key Items Content/Item Details/Item Description Text").GetComponent<TMP_Text>();
+        keyItemName = GameObject.Find("Canvas/Inventory/Tab Content/Key Items Content/Item Details/Item Name Text").GetComponent<TMP_Text>();
+        keyItemImage = GameObject.Find("Canvas/Inventory/Tab Content/Key Items Content/Item Details/Item Image").GetComponent<Image>();
+
+        //artifact content
+        artifactDescription = GameObject.Find("Canvas/Inventory/Tab Content/Artifacts Content/Item Details/Item Description Text").GetComponent<TMP_Text>();
+        artifactName = GameObject.Find("Canvas/Inventory/Tab Content/Artifacts Content/Item Details/Item Name Text").GetComponent<TMP_Text>();
+        artifactImage = GameObject.Find("Canvas/Inventory/Tab Content/Artifacts Content/Item Details/Item Image").GetComponent<Image>();
+        
         Button button = GetComponent<Button>();
         button.onClick.AddListener(OnButtonClick);
     }
 
     public void OnButtonClick()
     {
-        Debug.Log("Item is clicked");
-        Debug.Log(itemDescription);
+        if (item != null)
+        {
+            if (item.id == 1)
+            {
+                Color keyItemImageColor = keyItemImage.color;
+                if (keyItemImageColor.a < 1f)
+                {
+                    keyItemImageColor.a = 1f;
+                    keyItemImage.color = keyItemImageColor;
+                }
+
+                keyItemImage.sprite = this.item.icon;
+                keyItemName.text = this.item.itemName.ToUpper();
+                keyItemDescription.text = this.item.description;
+            }
+            else if (item.id == 2)
+            {
+                Color artifactImageColor = artifactImage.color;
+                if (artifactImageColor.a < 1f)
+                {
+                    artifactImageColor.a = 1f;
+                    artifactImage.color = artifactImageColor;
+                }
+
+                artifactImage.sprite = this.item.icon;
+                artifactName.text = this.item.itemName.ToUpper();
+                artifactDescription.text = this.item.description;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Item is null!");
+        }
     }
 
     public void GetItemData(Item item)
     {
-        itemImage = item.icon;
-        itemDescription = item.description;
+        this.item = item;
     }
 }
