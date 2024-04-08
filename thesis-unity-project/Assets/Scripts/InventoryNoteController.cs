@@ -22,11 +22,18 @@ public class InventoryNoteController : MonoBehaviour
 
         if(notes.Count == 0)
         {
+            Color currentColor = noteImage.color;
+            currentColor.a = 0f;
+            noteImage.color = currentColor;
+            
             nextButton.SetActive(false);
             previousButton.SetActive(false);
         }
         else if(notes.Count == 1)
         {
+            Color currentColor = noteImage.color;
+            currentColor.a = 1f;
+            noteImage.color = currentColor;
             ShowPage();
         }
         else

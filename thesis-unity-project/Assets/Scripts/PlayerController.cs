@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float distanceToGround = 0.8f;
     [SerializeField] private LayerMask groundCheck;
     [SerializeField] private float airResistance = 0.8f;
+    [SerializeField] private GameObject flashlight;
     private CapsuleCollider capsuleCollider;
 
     private Rigidbody playerRb;
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private float standingHeight = 1.79f;
     private Vector3 crouchCenterOffset = new Vector3(0f, 0.76f, 0f);
     private Vector3 standingCenterOffset = new Vector3(0f, 0.89f, 0f);
+    [SerializeField] private bool flashlightIsOn = false;
 
     private void Awake() 
     {
@@ -53,7 +55,11 @@ public class PlayerController : MonoBehaviour
         fallingHash = Animator.StringToHash("Falling");
         groundedHash = Animator.StringToHash("Grounded");
         crouchHash = Animator.StringToHash("Crouch");
-        // Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void Update()
+    {
+        HandleFlashlight();
     }
 
     private void FixedUpdate()
@@ -127,6 +133,33 @@ public class PlayerController : MonoBehaviour
             capsuleCollider.height = standingHeight;
             capsuleCollider.center = standingCenterOffset;
         }
+    }
+
+    private void HandleFlashlight()
+    {
+        if(inputManager.Flashlight)
+        {
+            Debug.Log("F is pressed");
+            if(!flashlightIsOn)
+            {
+                TurnOnFlashlight();
+            }
+            else{
+                TurnOffFlashlight();
+            }
+        }
+    }
+
+    private void TurnOnFlashlight()
+    {  
+        flashlight.SetActive(true);
+        flashlightIsOn = true;
+    }
+
+    private void TurnOffFlashlight()
+    {  
+        flashlight.SetActive(false);
+        flashlightIsOn = false;
     }
 
     private void HandleJump()
