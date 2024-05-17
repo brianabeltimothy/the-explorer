@@ -2,250 +2,206 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.SceneManagement;
 
 public class MummyAI : MonoBehaviour
 {
     [SerializeField] private Animator mummyAnimator;
     [SerializeField] private NavMeshAgent mummyAgent;
     [SerializeField] private List<Transform> destinations;
+    [SerializeField] private Transform player;
 
     //mummy settings
-    [Header("Mummy Settings")]
+    [Header("Walk Speeds")]
     [SerializeField] private float walkSpeed;
     [SerializeField] private float chaseSpeed;
+
+    [Header("Idle Time")]
     [SerializeField] private float minIdleTime;
     [SerializeField] private float maxIdleTime;
     [SerializeField] private float idleTime;
-    [SerializeField] private Vector3 rayCastOffset;
+
+    [Header("Field Of View")]
+    
+    [SerializeField] private GameObject raycastSource;
     [SerializeField] private float sightDistance;
-    [SerializeField] private float attackDistance;
+    [SerializeField] private float fieldOfViewAngle;
+
+    [Header("Chase Time")]
     [SerializeField] private float chaseTime;
     [SerializeField] private float minChaseTime;
     [SerializeField] private float maxChaseTime; 
-    [SerializeField] private float jumpscareTime;
+    
+    [Header("Attack Settings")]
+    [SerializeField] private float attackDistance;
+    [SerializeField] private float attackCooldownTime;
 
-    [SerializeField] private bool floatchasing;
-    [SerializeField] private Transform player;
-    public float fieldOfViewAngle;
-    public GameObject raycastSource; 
+    public Transform currentDest;
+    public int currentDestIndex = 0;
+    public bool moveToWaypoint = true;
 
-    Transform currentDest;
-    Vector3 dest;
-    int currentDestIndex = 0;
-
-    //FSM
-    private FSM<MummyState> fsm;
-    public enum MummyState
+    public enum EnemyState
     {
-        Idle,
         Patrol,
         Chase,
         Attack
     }
-    private bool isIdleCoroutineRunning = false;
-    private bool isAttackCoroutineRunning = false;
+    public EnemyState currentState;
 
-    private void Awake()
-    {
+    private bool isAttacking;
+    private float attackCooldownTimer;
+
+    private void Awake() {
         mummyAnimator = GetComponent<Animator>();
         mummyAgent = GetComponent<NavMeshAgent>();
-
-        // Initialize the FSM with the initial state
-        fsm = new FSM<MummyState>(MummyState.Patrol);
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    private void Start()
+    void Start()
     {
+        currentState = EnemyState.Patrol;
         currentDest = destinations[currentDestIndex];
-
-        // Add states to the FSM
-        fsm.AddState(MummyState.Idle, OnEnterIdle, OnUpdateIdle, OnExitIdle);
-        fsm.AddState(MummyState.Patrol, OnEnterPatrol, OnUpdatePatrol, OnExitPatrol);
-        fsm.AddState(MummyState.Chase, OnEnterChase, OnUpdateChase, OnExitChase);
-        fsm.AddState(MummyState.Attack, OnEnterAttack, OnUpdateAttack, OnExitAttack);
+        isAttacking = false;
+        attackCooldownTimer = 0f;
     }
-    
-    private void Update()
-    {
-        // Update the FSM
-        fsm.Update();
 
-        Vector3 direction = (player.position - raycastSource.transform.position).normalized; // Use the raycastSource's position
+    void Update()
+    {
+        switch (currentState)
+        {
+            case EnemyState.Patrol:
+                Patrol();
+                break;
+            case EnemyState.Chase:
+                Chase();
+                break;
+            case EnemyState.Attack:
+                Attack();
+                break;
+        }
+
+        // Update attack cooldown timer
+        if (attackCooldownTimer > 0)
+        {
+            attackCooldownTimer -= Time.deltaTime;
+        }
+    }
+
+    void Patrol()
+    {
+        Vector3 direction = (player.position - raycastSource.transform.position).normalized;
         float angle = Vector3.Angle(raycastSource.transform.forward, direction);
+
         if (angle <= fieldOfViewAngle * 0.5f)
         {
             RaycastHit hit;
-            if (Physics.Raycast(raycastSource.transform.position + rayCastOffset, direction, out hit, sightDistance))
+            if (Physics.Raycast(raycastSource.transform.position, direction, out hit, sightDistance))
             {
                 if (hit.collider.gameObject.tag == "Player")
                 {
+                    // Player is within sight distance and angle
                     float distanceToPlayer = Vector3.Distance(raycastSource.transform.position, player.position);
-                    
                     if (distanceToPlayer <= sightDistance)
                     {
-                        StopAllCoroutines();
                         StartCoroutine(ChaseCoroutine());
+                        currentState = EnemyState.Chase;
+                        return;
                     }
                 }
             }
         }
-        Debug.DrawRay(transform.position + rayCastOffset, direction * sightDistance, Color.red);
 
-        float distance = Vector3.Distance(player.position, mummyAgent.transform.position);
-        
-        if (distance <= attackDistance && !isOnCooldown)
+        if (moveToWaypoint == true)
         {
-            // Transition to the attack state only if not on cooldown
-            fsm.ChangeState(MummyState.Attack);
-            // Start the cooldown timer
-            attackCooldownTimer = attackCooldownDuration;
-            isOnCooldown = true;
-        }
+            mummyAgent.SetDestination(currentDest.position);
+            mummyAgent.speed = walkSpeed;
+            mummyAnimator.ResetTrigger("Idle");
+            mummyAnimator.SetTrigger("Walk");
 
-        // Update the cooldown timer
-        if (isOnCooldown)
-        {
-            attackCooldownTimer -= Time.deltaTime;
-            if (attackCooldownTimer <= 0f)
+            if(mummyAgent.remainingDistance <= mummyAgent.stoppingDistance)
             {
-                isOnCooldown = false; // Reset the cooldown state
+                StartCoroutine(StayIdleCoroutine());
+                moveToWaypoint = false;
             }
         }
     }
 
-    // Define enter, update, and exit callbacks for each state
-    #region IdleState
-    private void OnEnterIdle()
+    void Chase()
     {
-        idleTime = Random.Range(minIdleTime, maxIdleTime);
-        if(idleTime < 1f)
-        {
-            idleTime = 0;
-            fsm.ChangeState(MummyState.Patrol);
-        }
-        else{
-            mummyAnimator.ResetTrigger("Walk");
-            mummyAnimator.SetTrigger("Idle");
-            mummyAgent.speed = 0;
-        }
-    }
-    
-    private void OnUpdateIdle()
-    {
-        // If the coroutine is not already running, start it
-        if (!isIdleCoroutineRunning)
-        {
-            StartCoroutine(StayIdleCoroutine());
-        }
-    }
-
-    private void OnExitIdle()
-    {
-        // choose next destination
-        if(currentDestIndex == destinations.Count - 1)
-        {
-            currentDestIndex = 0;
-        }
-        else
-        {
-            currentDestIndex++;
-        }
-        currentDest = destinations[currentDestIndex];
-        dest = currentDest.position;
-        mummyAgent.destination = dest;
-        isIdleCoroutineRunning = false;
-    }
-    #endregion
-
-    #region PatrolState
-    private void OnEnterPatrol()
-    {
-        
-    }
-    private void OnUpdatePatrol()
-    {
-        dest = currentDest.position;
-        mummyAgent.destination = dest;
-        mummyAgent.speed = walkSpeed;
-        mummyAnimator.ResetTrigger("Idle");
-        mummyAnimator.SetTrigger("Walk");
-        if(mummyAgent.remainingDistance <= mummyAgent.stoppingDistance)
-        {
-            fsm.ChangeState(MummyState.Idle);
-        }
-    }   
-    private void OnExitPatrol()
-    {
-
-    }
-    #endregion
-    
-    #region ChaseState
-    private void OnEnterChase()
-    {
-        Debug.Log("on enter chase");
         mummyAnimator.ResetTrigger("Idle");
         mummyAnimator.ResetTrigger("Walk");
         mummyAnimator.ResetTrigger("Attack");
         mummyAnimator.SetTrigger("Run");
         mummyAgent.speed = chaseSpeed;
+        mummyAgent.SetDestination(player.transform.position);
+
+        float distance = Vector3.Distance(player.position, mummyAgent.transform.position);
+        if (distance <= attackDistance && attackCooldownTimer <= 0)
+        {
+            currentState = EnemyState.Attack;
+        }
     }
 
-    private void OnUpdateChase()
+    void Attack()
     {
-        dest = player.position;
-        mummyAgent.destination = dest;
-        Vector3 direction = (dest - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+        if (!isAttacking)
+        {
+            isAttacking = true;
+            mummyAnimator.ResetTrigger("Idle");
+            mummyAnimator.ResetTrigger("Walk");
+            mummyAnimator.ResetTrigger("Run");
+            mummyAnimator.SetTrigger("Attack");
+            mummyAgent.speed = 0;
+
+            Vector3 direction = (player.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+        }
+
+        if (mummyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Mummy Attack") &&
+            mummyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f)
+        {
+            // Attack animation is almost finished, reset the flag and set cooldown
+            isAttacking = false;
+            attackCooldownTimer = attackCooldownTime;
+            currentState = EnemyState.Chase;
+        }
     }
-
-
-    private void OnExitChase()
-    {
-        // Debug.Log("on exit chase");
-    }
-    #endregion
-
-    #region AttackState
-    [SerializeField] private bool isOnCooldown = false;
-    [SerializeField] private float attackCooldownTimer = 0f;
-    [SerializeField] private float attackCooldownDuration = 1f;
-
-    private void OnEnterAttack()
-    {
-        mummyAnimator.ResetTrigger("Idle");
-        mummyAnimator.ResetTrigger("Walk");
-        mummyAnimator.ResetTrigger("Run");
-        mummyAnimator.SetTrigger("Attack");
-        mummyAgent.speed = 0;
-    }
-
-    private void OnUpdateAttack()
-    {
-        
-    }
-
-    private void OnExitAttack()
-    {
-        // Implement any exit logic here
-    }
-    #endregion
 
     private IEnumerator StayIdleCoroutine()
     {
-        isIdleCoroutineRunning = true;
-        yield return new WaitForSeconds(idleTime);
-        fsm.ChangeState(MummyState.Patrol);
+        idleTime = Random.Range(minIdleTime, maxIdleTime);
+        if(idleTime < 1f)
+        {
+            idleTime = 0;
+        }
+        else
+        {
+            mummyAnimator.ResetTrigger("Walk");
+            mummyAnimator.SetTrigger("Idle");
+            mummyAgent.speed = 0;
+
+            yield return new WaitForSeconds(idleTime);
+            
+            moveToWaypoint = true;
+            // choose next destination
+            if(currentDestIndex == destinations.Count - 1)
+            {
+                currentDestIndex = 0;
+            }
+            else
+            {
+                currentDestIndex++;
+            }
+            currentDest = destinations[currentDestIndex];
+            mummyAgent.SetDestination(currentDest.position);
+        }
     }
 
-    private IEnumerator ChaseCoroutine()
+    IEnumerator ChaseCoroutine()
     {
-        fsm.ChangeState(MummyState.Chase);
         chaseTime = Random.Range(minChaseTime, maxChaseTime);
         yield return new WaitForSeconds(chaseTime);
-        fsm.ChangeState(MummyState.Patrol); 
-        currentDest = destinations[currentDestIndex];
+        moveToWaypoint = true;
+        currentState = EnemyState.Patrol; // Transition back to Patrol state after chase time elapses
     }
 }
