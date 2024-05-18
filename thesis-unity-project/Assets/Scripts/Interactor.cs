@@ -9,9 +9,9 @@ interface IInteractable
 
 public class Interactor : MonoBehaviour
 {
-    [SerializeField] private Material highlightMaterial;
+    // [SerializeField] private Material highlightMaterial;
 
-    [SerializeField] private Material defaultMaterial;
+    // [SerializeField] private Material defaultMaterial;
     private Transform selectedObject;
     private InputManager inputManager;
     private Transform interactorSource;
@@ -27,8 +27,7 @@ public class Interactor : MonoBehaviour
     {
         if(selectedObject != null)
         {
-            var selectionRenderer = selectedObject.GetComponent<Renderer>();
-            selectionRenderer.material = defaultMaterial;
+            UIManager.Instance.DisableInteractText();
             selectedObject = null;
         }
 
@@ -39,17 +38,14 @@ public class Interactor : MonoBehaviour
             if(hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj))
             {
                 var selection = hitInfo.transform;
-                var selectionRenderer = selection.GetComponent<Renderer>();
-                if(selectionRenderer != null){
-                    defaultMaterial = selectionRenderer.material;
-                    selectionRenderer.material = highlightMaterial;
-                }
+                UIManager.Instance.EnableInteractText();
 
                 selectedObject = selection;
 
                 if(inputManager.Interact)
                 {
                     interactObj.Interact();
+                    UIManager.Instance.DisableInteractText();
                 }
             }
         }

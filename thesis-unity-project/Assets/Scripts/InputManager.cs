@@ -93,6 +93,7 @@ public class InputManager : MonoBehaviour
     {
         Inventory = false;
         Flashlight = false;
+        Interact = false;
     }
 
     private void OnEnable() {
