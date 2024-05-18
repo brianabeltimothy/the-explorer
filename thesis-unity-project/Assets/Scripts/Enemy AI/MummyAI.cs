@@ -10,7 +10,7 @@ public class MummyAI : MonoBehaviour
     [SerializeField] private List<Transform> destinations;
     [SerializeField] private Transform player;
 
-    //mummy settings
+    // Mummy settings
     [Header("Walk Speeds")]
     [SerializeField] private float walkSpeed;
     [SerializeField] private float chaseSpeed;
@@ -18,26 +18,27 @@ public class MummyAI : MonoBehaviour
     [Header("Idle Time")]
     [SerializeField] private float minIdleTime;
     [SerializeField] private float maxIdleTime;
-    [SerializeField] private float idleTime;
 
     [Header("Field Of View")]
-    
     [SerializeField] private GameObject raycastSource;
     [SerializeField] private float sightDistance;
     [SerializeField] private float fieldOfViewAngle;
 
     [Header("Chase Time")]
+    [SerializeField] private float chaseTimer;
     [SerializeField] private float chaseTime;
     [SerializeField] private float minChaseTime;
-    [SerializeField] private float maxChaseTime; 
-    
+    [SerializeField] private float maxChaseTime;
+
     [Header("Attack Settings")]
     [SerializeField] private float attackDistance;
-    [SerializeField] private float attackCooldownTime;
 
     public Transform currentDest;
     public int currentDestIndex = 0;
     public bool moveToWaypoint = true;
+    public bool isAttacking;
+
+    [SerializeField] private BoxCollider boxCollider;
 
     public enum EnemyState
     {
@@ -47,13 +48,12 @@ public class MummyAI : MonoBehaviour
     }
     public EnemyState currentState;
 
-    private bool isAttacking;
-    private float attackCooldownTimer;
-
-    private void Awake() {
+    private void Awake()
+    {
         mummyAnimator = GetComponent<Animator>();
         mummyAgent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        boxCollider = GetComponentInChildren<BoxCollider>();
     }
 
     void Start()
@@ -61,7 +61,8 @@ public class MummyAI : MonoBehaviour
         currentState = EnemyState.Patrol;
         currentDest = destinations[currentDestIndex];
         isAttacking = false;
-        attackCooldownTimer = 0f;
+        chaseTimer = 0;
+        boxCollider.enabled = false;
     }
 
     void Update()
@@ -77,12 +78,6 @@ public class MummyAI : MonoBehaviour
             case EnemyState.Attack:
                 Attack();
                 break;
-        }
-
-        // Update attack cooldown timer
-        if (attackCooldownTimer > 0)
-        {
-            attackCooldownTimer -= Time.deltaTime;
         }
     }
 
@@ -102,8 +97,9 @@ public class MummyAI : MonoBehaviour
                     float distanceToPlayer = Vector3.Distance(raycastSource.transform.position, player.position);
                     if (distanceToPlayer <= sightDistance)
                     {
-                        StartCoroutine(ChaseCoroutine());
                         currentState = EnemyState.Chase;
+                        chaseTime = Random.Range(minChaseTime, maxChaseTime);
+                        chaseTimer = 0;
                         return;
                     }
                 }
@@ -117,7 +113,7 @@ public class MummyAI : MonoBehaviour
             mummyAnimator.ResetTrigger("Idle");
             mummyAnimator.SetTrigger("Walk");
 
-            if(mummyAgent.remainingDistance <= mummyAgent.stoppingDistance)
+            if (mummyAgent.remainingDistance <= mummyAgent.stoppingDistance)
             {
                 StartCoroutine(StayIdleCoroutine());
                 moveToWaypoint = false;
@@ -135,9 +131,26 @@ public class MummyAI : MonoBehaviour
         mummyAgent.SetDestination(player.transform.position);
 
         float distance = Vector3.Distance(player.position, mummyAgent.transform.position);
-        if (distance <= attackDistance && attackCooldownTimer <= 0)
+        chaseTimer += Time.deltaTime;
+
+        if (distance <= attackDistance)
         {
             currentState = EnemyState.Attack;
+        }
+        else if (chaseTimer >= chaseTime)
+        {
+            currentState = EnemyState.Patrol;
+            chaseTimer = 0;
+        }
+        else
+        {
+            Vector3 direction = (player.position - raycastSource.transform.position).normalized;
+            float angle = Vector3.Angle(raycastSource.transform.forward, direction);
+
+            if (angle > fieldOfViewAngle * 0.5f || !IsPlayerInSight())
+            {
+                // Continue chasing for the remaining chaseTime
+            }
         }
     }
 
@@ -162,15 +175,14 @@ public class MummyAI : MonoBehaviour
         {
             // Attack animation is almost finished, reset the flag and set cooldown
             isAttacking = false;
-            attackCooldownTimer = attackCooldownTime;
             currentState = EnemyState.Chase;
         }
     }
 
     private IEnumerator StayIdleCoroutine()
     {
-        idleTime = Random.Range(minIdleTime, maxIdleTime);
-        if(idleTime < 1f)
+        float idleTime = Random.Range(minIdleTime, maxIdleTime);
+        if (idleTime < 1f)
         {
             idleTime = 0;
         }
@@ -181,10 +193,10 @@ public class MummyAI : MonoBehaviour
             mummyAgent.speed = 0;
 
             yield return new WaitForSeconds(idleTime);
-            
+
             moveToWaypoint = true;
             // choose next destination
-            if(currentDestIndex == destinations.Count - 1)
+            if (currentDestIndex == destinations.Count - 1)
             {
                 currentDestIndex = 0;
             }
@@ -197,11 +209,41 @@ public class MummyAI : MonoBehaviour
         }
     }
 
-    IEnumerator ChaseCoroutine()
+    private bool IsPlayerInSight()
     {
-        chaseTime = Random.Range(minChaseTime, maxChaseTime);
-        yield return new WaitForSeconds(chaseTime);
-        moveToWaypoint = true;
-        currentState = EnemyState.Patrol; // Transition back to Patrol state after chase time elapses
+        Vector3 direction = (player.position - raycastSource.transform.position).normalized;
+        float angle = Vector3.Angle(raycastSource.transform.forward, direction);
+
+        if (angle <= fieldOfViewAngle * 0.5f)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(raycastSource.transform.position, direction, out hit, sightDistance))
+            {
+                if (hit.collider.gameObject.tag == "Player")
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    void EnableAttack()
+    {
+        boxCollider.enabled = true;
+    }
+
+    void DisableAttack()
+    {
+        boxCollider.enabled = false;
+    }
+
+    public void OnChildTriggerEnter(Collider other)
+    {
+        Debug.Log("Collision with: " + other.gameObject.name);
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Hit!");
+        }
     }
 }
