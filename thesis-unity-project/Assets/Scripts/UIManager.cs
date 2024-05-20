@@ -17,7 +17,6 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         DisableInteractText();
-        // interactText.text = "";
     }
 
     public void ChangeInteractText(string text)

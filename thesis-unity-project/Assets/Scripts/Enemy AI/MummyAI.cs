@@ -9,6 +9,7 @@ public class MummyAI : MonoBehaviour
     [SerializeField] private NavMeshAgent mummyAgent;
     [SerializeField] private List<Transform> destinations;
     [SerializeField] private Transform player;
+    [SerializeField] private Player playerScript;
 
     // Mummy settings
     [Header("Walk Speeds")]
@@ -63,6 +64,7 @@ public class MummyAI : MonoBehaviour
         isAttacking = false;
         chaseTimer = 0;
         boxCollider.enabled = false;
+        playerScript = player.GetComponent<Player>();
     }
 
     void Update()
@@ -240,10 +242,9 @@ public class MummyAI : MonoBehaviour
 
     public void OnChildTriggerEnter(Collider other)
     {
-        Debug.Log("Collision with: " + other.gameObject.name);
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Hit!");
+            playerScript.TakeDamage();
         }
     }
 }
