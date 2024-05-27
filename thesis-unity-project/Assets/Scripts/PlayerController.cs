@@ -37,6 +37,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 standingCenterOffset = new Vector3(0f, 0.89f, 0f);
     [SerializeField] private bool flashlightIsOn = false;
 
+    public bool canMove = true;
+
     private void Awake() 
     {
         playerRb = GetComponent<Rigidbody>();
@@ -65,8 +67,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
-        HandleCrouch();
+        if(canMove)
+        {
+            Move();
+            HandleCrouch();
+        }
     }
 
     private void LateUpdate() 
@@ -98,7 +103,7 @@ public class PlayerController : MonoBehaviour
         if (inputManager.Move == Vector2.zero) targetSpeed = 0.1f;
 
         Vector3 movement = new Vector3(inputManager.Move.x, 0f, inputManager.Move.y);
-        movement = transform.TransformDirection(movement) * targetSpeed * Time.deltaTime;
+        movement = transform.TransformDirection(movement) * targetSpeed * Time.deltaTime * 0.8f;
 
         Vector3 newPosition = transform.position + movement;
 
@@ -140,6 +145,15 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.position = targetPosition;
+    }
+
+    public void SetIdleAnimation()
+    {
+        if (!hasAnimator) return;
+
+        // Set animator parameters to idle values
+        animator.SetFloat(xVelHash, 0f);
+        animator.SetFloat(yVelHash, 0f);
     }
 
     private void HandleFlashlight()

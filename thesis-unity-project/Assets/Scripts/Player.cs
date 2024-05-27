@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float cooldownTimer = 0.0f;
     [SerializeField] private bool isCoolingDown = false;
 
+    public bool isHiding = false;
+
     void Update()
     {
         if(currentHits == maxHits)
