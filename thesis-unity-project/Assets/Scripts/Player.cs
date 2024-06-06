@@ -18,10 +18,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if(currentHits == maxHits)
-        {
-            Debug.Log("player dies");
-        }
+        // if(currentHits == maxHits)
+        // {
+        //     Debug.Log("player dies");
+        // }
 
         if (isCoolingDown)
         {

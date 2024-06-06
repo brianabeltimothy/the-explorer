@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DoorController : MonoBehaviour, IInteractable
 {
-    private bool open = false;
+    public bool isOpen = false;
     private bool isAnimating = false; // Flag to track if an animation is in progress
     private Animator animator;
 
@@ -17,7 +17,7 @@ public class DoorController : MonoBehaviour, IInteractable
         // Prevent interaction if an animation is currently in progress
         if (isAnimating) return;
 
-        if (open)
+        if (isOpen)
         {
             CloseDoor();
         }
@@ -27,17 +27,17 @@ public class DoorController : MonoBehaviour, IInteractable
         }
     }
 
-    private void OpenDoor()
+    public void OpenDoor()
     {
-        open = true;
+        isOpen = true;
         isAnimating = true;
         animator.ResetTrigger("Open");
         animator.SetTrigger("Open");
     }
 
-    private void CloseDoor()
+    public void CloseDoor()
     {
-        open = false;
+        isOpen = false;
         isAnimating = true;
         animator.ResetTrigger("Close");
         animator.SetTrigger("Close");

@@ -35,7 +35,7 @@ public class MummyAI : MonoBehaviour
     [SerializeField] private float attackDistance;
 
     public Transform currentDest;
-    public int currentDestIndex = 0;
+    private int currentDestIndex = 0;
     public bool moveToWaypoint = true;
     public bool isAttacking;
 
@@ -115,8 +115,8 @@ public class MummyAI : MonoBehaviour
             mummyAnimator.ResetTrigger("Idle");
             mummyAnimator.SetTrigger("Walk");
 
-            if (mummyAgent.remainingDistance <= mummyAgent.stoppingDistance)
-            {
+            if (Vector3.Distance(mummyAgent.transform.position, currentDest.position) <= 2f)
+            { 
                 StartCoroutine(StayIdleCoroutine());
                 moveToWaypoint = false;
             }
@@ -133,16 +133,11 @@ public class MummyAI : MonoBehaviour
         mummyAgent.SetDestination(player.transform.position);
 
         float distance = Vector3.Distance(player.position, mummyAgent.transform.position);
-        chaseTimer += Time.deltaTime;
 
         if (distance <= attackDistance)
         {
             currentState = EnemyState.Attack;
-        }
-        else if (chaseTimer >= chaseTime)
-        {
-            currentState = EnemyState.Patrol;
-            chaseTimer = 0;
+            chaseTimer = 0; // Reset the chase timer when attacking
         }
         else
         {
@@ -151,13 +146,31 @@ public class MummyAI : MonoBehaviour
 
             if (angle > fieldOfViewAngle * 0.5f || !IsPlayerInSight())
             {
-                // Continue chasing for the remaining chaseTime
+                chaseTimer += Time.deltaTime; // Start the chase timer only when the player is out of sight
+
+                if (chaseTimer >= chaseTime)
+                {
+                    ChooseNearestDestinations();
+                    currentState = EnemyState.Patrol;
+                    chaseTimer = 0; // Reset the timer when transitioning to Patrol state
+                }
+            }
+            else
+            {
+                chaseTimer = 0; // Reset the timer if the player is in sight
             }
         }
     }
 
     void Attack()
     {
+        Vector3 offset = player.right * 0.7f; // Adjust the offset value as needed
+        Vector3 targetPosition = player.position + offset;
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+
+
         if (!isAttacking)
         {
             isAttacking = true;
@@ -165,13 +178,10 @@ public class MummyAI : MonoBehaviour
             mummyAnimator.ResetTrigger("Walk");
             mummyAnimator.ResetTrigger("Run");
             mummyAnimator.SetTrigger("Attack");
-            mummyAgent.speed = 0;
-
-            Vector3 direction = (player.position - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+            mummyAgent.speed = 0; // Stop moving
         }
 
+        // Check if the attack animation is almost finished
         if (mummyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Mummy Attack") &&
             mummyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f)
         {
@@ -196,7 +206,6 @@ public class MummyAI : MonoBehaviour
 
             yield return new WaitForSeconds(idleTime);
 
-            moveToWaypoint = true;
             // choose next destination
             if (currentDestIndex == destinations.Count - 1)
             {
@@ -207,7 +216,7 @@ public class MummyAI : MonoBehaviour
                 currentDestIndex++;
             }
             currentDest = destinations[currentDestIndex];
-            mummyAgent.SetDestination(currentDest.position);
+            moveToWaypoint = true;
         }
     }
 
@@ -238,6 +247,21 @@ public class MummyAI : MonoBehaviour
     void DisableAttack()
     {
         boxCollider.enabled = false;
+    }
+
+    void ChooseNearestDestinations()
+    {
+        float currentShortestDistance = Vector3.Distance(destinations[0].position, this.transform.position);
+        
+        for(int i = 1; i < destinations.Count; i++)
+        {
+            if(Vector3.Distance(destinations[i].position, this.transform.position) < currentShortestDistance)
+            {
+                currentShortestDistance = Vector3.Distance(destinations[i].position, this.transform.position);
+                currentDestIndex = i;
+            }
+        }
+        currentDest = destinations[currentDestIndex];
     }
 
     public void OnChildTriggerEnter(Collider other)
