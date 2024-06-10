@@ -12,7 +12,7 @@ public class HidingChestController : MonoBehaviour, IInteractable
 
     [SerializeField] private BoxCollider boxCollider; 
 
-    private bool open = false;
+    public bool isOpen = false;
     private bool isAnimating = false;
     private Animator animator;
     private bool isMoving = false;
@@ -39,7 +39,7 @@ public class HidingChestController : MonoBehaviour, IInteractable
         }
     }
 
-    private void Hide()
+    public void Hide()
     {
         playerController.SetIdleAnimation();
         if (!isMoving)
@@ -50,7 +50,7 @@ public class HidingChestController : MonoBehaviour, IInteractable
         }
     }
 
-    private void Out()
+    public void Out()
     {
         if (!isMoving)
         {
@@ -130,7 +130,7 @@ public class HidingChestController : MonoBehaviour, IInteractable
 
     private void OpenDoor()
     {
-        open = true;
+        isOpen = true;
         isAnimating = true;
         animator.ResetTrigger("Open");
         animator.SetTrigger("Open");
@@ -138,7 +138,7 @@ public class HidingChestController : MonoBehaviour, IInteractable
 
     private void CloseDoor()
     {
-        open = false;
+        isOpen = false;
         isAnimating = true;
         animator.ResetTrigger("Close");
         animator.SetTrigger("Close");
