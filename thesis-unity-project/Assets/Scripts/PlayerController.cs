@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform crouchCamTransform;
     private float xRotation; //cam rotation in x axis
     private const float walkSpeedAnim = 2f;
-    private const float runSpeedAnim = 6f;
+    private const float runSpeedAnim = 4f;
     private Vector2 currentVelocity;
     private float crouchHeight = 1.6f;
     private float standingHeight = 1.79f;

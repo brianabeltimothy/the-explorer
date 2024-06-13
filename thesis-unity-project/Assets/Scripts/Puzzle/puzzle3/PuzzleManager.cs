@@ -62,6 +62,7 @@ public class PuzzleManager : MonoBehaviour
         }
 
         stoneCover.transform.position = stoneCoverTargetPos;
+        Destroy(stoneCover);
     }
 
     private void OnDestroy()
