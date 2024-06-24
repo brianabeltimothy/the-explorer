@@ -5,20 +5,24 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float animationBlendSpeed = 9f;
     [SerializeField] private Transform cameraRoot;
     [SerializeField] private Transform cam;
     [SerializeField] private float upperLimit = -40f;
     [SerializeField] private float bottomLimit = 70f;
     [SerializeField] private float mouseSensitivity = 5;
     [SerializeField] private GameObject flashlight;
-    private CapsuleCollider capsuleCollider;
+    
+    //sound manager
+    [SerializeField] private StepsSoundManager stepsSoundManager; // Reference to the StepsSoundManager
+    [SerializeField] private float stepSoundInterval = 0.5f; // Interval for step sounds
+    
+    public bool canMove = true;
 
+    private CapsuleCollider capsuleCollider;
     private Rigidbody playerRb;
     private InputManager inputManager;
     private Animator animator;
     private bool hasAnimator;
-    private bool grounded = true;
     private int xVelHash;
     private int yVelHash;
     private int zVelHash;
@@ -26,18 +30,14 @@ public class PlayerController : MonoBehaviour
     private int fallingHash;
     private int groundedHash;
     private int crouchHash;
-    [SerializeField] private Transform crouchCamTransform;
-    private float xRotation; //cam rotation in x axis
+    private float xRotation; 
     private const float walkSpeedAnim = 2f;
     private const float runSpeedAnim = 4f;
-    private Vector2 currentVelocity;
     private float crouchHeight = 1.6f;
     private float standingHeight = 1.79f;
     private Vector3 crouchCenterOffset = new Vector3(0f, 0.76f, 0f);
     private Vector3 standingCenterOffset = new Vector3(0f, 0.89f, 0f);
-    [SerializeField] private bool flashlightIsOn = false;
-
-    public bool canMove = true;
+    private bool flashlightIsOn = false;
 
     private void Awake() 
     {
@@ -45,7 +45,9 @@ public class PlayerController : MonoBehaviour
         inputManager = GetComponent<InputManager>();
         hasAnimator = TryGetComponent<Animator>(out animator);
         capsuleCollider = GetComponent<CapsuleCollider>();
-
+    }
+    
+    private void Start() {
         xVelHash = Animator.StringToHash("X_Velocity");
         yVelHash = Animator.StringToHash("Y_Velocity");
         zVelHash = Animator.StringToHash("Z_Velocity");
@@ -53,11 +55,6 @@ public class PlayerController : MonoBehaviour
         fallingHash = Animator.StringToHash("Falling");
         groundedHash = Animator.StringToHash("Grounded");
         crouchHash = Animator.StringToHash("Crouch");
-    }
-    
-    private void Start() {
-        // initialCameraPosition = cameraRoot.position;
-        // crouchedCameraPosition = new Vector3(cameraRoot.position.x, cameraRoot.position.y - 0.6f, cameraRoot.position.z);
     }
 
     private void Update()
@@ -100,7 +97,17 @@ public class PlayerController : MonoBehaviour
         if (!hasAnimator) return;
 
         float targetSpeed = inputManager.Run ? runSpeedAnim : walkSpeedAnim;
-        if (inputManager.Move == Vector2.zero) targetSpeed = 0.1f;
+
+        bool isDiagonal = Mathf.Abs(inputManager.Move.x) > 0.1f && Mathf.Abs(inputManager.Move.y) > 0.1f;
+
+        if (!inputManager.Run && isDiagonal)
+        {
+            targetSpeed = 2.4f;
+        }
+        else if (inputManager.Move == Vector2.zero)
+        {
+            targetSpeed = 0.1f;
+        }
 
         Vector3 movement = new Vector3(inputManager.Move.x, 0f, inputManager.Move.y);
         movement = transform.TransformDirection(movement) * targetSpeed * Time.deltaTime * 0.8f;
@@ -109,9 +116,15 @@ public class PlayerController : MonoBehaviour
 
         playerRb.MovePosition(newPosition);
 
-        // Update animator parameters
-        animator.SetFloat(xVelHash, inputManager.Move.x * targetSpeed);
-        animator.SetFloat(yVelHash, inputManager.Move.y * targetSpeed);
+        float currentXVel = animator.GetFloat(xVelHash);
+        float currentYVel = animator.GetFloat(yVelHash);
+
+        float smoothTime = 0.15f;
+        float newXVel = Mathf.Lerp(currentXVel, inputManager.Move.x * targetSpeed, Time.deltaTime / smoothTime);
+        float newYVel = Mathf.Lerp(currentYVel, inputManager.Move.y * targetSpeed, Time.deltaTime / smoothTime);
+
+        animator.SetFloat(xVelHash, newXVel);
+        animator.SetFloat(yVelHash, newYVel);
     }
 
     private void CameraMovement()
