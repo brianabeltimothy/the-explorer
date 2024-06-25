@@ -12,9 +12,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float mouseSensitivity = 5;
     [SerializeField] private GameObject flashlight;
     
-    //sound manager
-    [SerializeField] private StepsSoundManager stepsSoundManager; // Reference to the StepsSoundManager
-    [SerializeField] private float stepSoundInterval = 0.5f; // Interval for step sounds
+    [Header("Step Sound Manager")]
+    [SerializeField] private StepsSoundManager stepsSoundManager;
+    [SerializeField] private float walkStepSoundInterval = 0.5f;
+    [SerializeField] private float runStepSoundInterval = 0.3f; //0.485
+    private float stepTimer;
     
     public bool canMove = true;
 
@@ -45,6 +47,7 @@ public class PlayerController : MonoBehaviour
         inputManager = GetComponent<InputManager>();
         hasAnimator = TryGetComponent<Animator>(out animator);
         capsuleCollider = GetComponent<CapsuleCollider>();
+        stepsSoundManager = GetComponent<StepsSoundManager>();
     }
     
     private void Start() {
@@ -102,7 +105,7 @@ public class PlayerController : MonoBehaviour
 
         if (!inputManager.Run && isDiagonal)
         {
-            targetSpeed = 2.4f;
+            targetSpeed = 2.268f;
         }
         else if (inputManager.Move == Vector2.zero)
         {
@@ -125,6 +128,22 @@ public class PlayerController : MonoBehaviour
 
         animator.SetFloat(xVelHash, newXVel);
         animator.SetFloat(yVelHash, newYVel);
+
+        // Handle footstep sounds based on movement
+        float interval = inputManager.Run ? runStepSoundInterval : walkStepSoundInterval;
+        if (inputManager.Move != Vector2.zero)
+        {
+            stepTimer -= Time.deltaTime;
+            if (stepTimer <= 0)
+            {
+                stepsSoundManager.PlayStepSound();
+                stepTimer = interval;
+            }
+        }
+        else
+        {
+            stepTimer = interval;
+        }
     }
 
     private void CameraMovement()
