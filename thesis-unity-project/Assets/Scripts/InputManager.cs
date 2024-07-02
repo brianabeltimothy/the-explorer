@@ -14,6 +14,7 @@ public class InputManager : MonoBehaviour
     public bool Inventory {get; private set;}
     public bool Interact {get; private set;}
     public bool Flashlight {get; private set;}
+    public bool Pause {get; private set;}
 
     private InputActionMap currentMap;
     private InputAction moveAction;
@@ -24,6 +25,7 @@ public class InputManager : MonoBehaviour
     private InputAction inventoryAction;
     private InputAction interactAction;
     private InputAction flashlightAction;
+    private InputAction pauseAction;
 
     private void Start() {
         currentMap = playerInput.currentActionMap;
@@ -35,6 +37,7 @@ public class InputManager : MonoBehaviour
         inventoryAction = currentMap.FindAction("Inventory");
         interactAction = currentMap.FindAction("Interact");
         flashlightAction = currentMap.FindAction("Flashlight");
+        pauseAction = currentMap.FindAction("Pause");
 
         moveAction.performed += onMove;
         lookAction.performed += onLook;
@@ -44,6 +47,7 @@ public class InputManager : MonoBehaviour
         inventoryAction.performed += onInventory;
         interactAction.performed += onInteract;
         flashlightAction.performed += onFlashlight;
+        pauseAction.performed += onPause;
 
         moveAction.canceled += onMove;
         lookAction.canceled += onLook;
@@ -53,6 +57,7 @@ public class InputManager : MonoBehaviour
         inventoryAction.canceled += onInventory;
         interactAction.canceled += onInteract;
         flashlightAction.canceled += onFlashlight;
+        pauseAction.canceled += onPause;
     }
 
     private void onMove(InputAction.CallbackContext context)
@@ -84,6 +89,10 @@ public class InputManager : MonoBehaviour
         Interact = context.ReadValueAsButton();
     }
     private void onFlashlight(InputAction.CallbackContext context)
+    {
+        Flashlight = context.ReadValueAsButton();
+    }
+    private void onPause(InputAction.CallbackContext context)
     {
         Flashlight = context.ReadValueAsButton();
     }

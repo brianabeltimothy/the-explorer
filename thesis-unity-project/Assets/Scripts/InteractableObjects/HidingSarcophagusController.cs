@@ -16,6 +16,7 @@ public class HidingSarcophagusController : MonoBehaviour, IInteractable
     private bool isAnimating = false;
     private Animator animator;
     private bool isMoving = false;
+    private AudioSource audioSource;
 
     private Player player;
     private PlayerController playerController;
@@ -25,6 +26,7 @@ public class HidingSarcophagusController : MonoBehaviour, IInteractable
         boxCollider = GetComponent<BoxCollider>();
         player = playerTransform.GetComponent<Player>();
         playerController = playerTransform.GetComponent<PlayerController>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void Interact()
@@ -105,6 +107,9 @@ public class HidingSarcophagusController : MonoBehaviour, IInteractable
         isAnimating = true;
         animator.ResetTrigger("Open");
         animator.SetTrigger("Open");
+        audioSource.pitch = Random.Range(0.9f, 1.1f);
+        audioSource.volume = Random.Range(0.8f, 1.0f);
+        audioSource.Play();
     }
 
     private void CloseDoor()
@@ -113,6 +118,9 @@ public class HidingSarcophagusController : MonoBehaviour, IInteractable
         isAnimating = true;
         animator.ResetTrigger("Close");
         animator.SetTrigger("Close");
+        audioSource.pitch = Random.Range(0.9f, 1.1f);
+        audioSource.volume = Random.Range(0.8f, 1.0f);
+        audioSource.Play();
     }
 
     public void OnAnimationComplete()

@@ -6,12 +6,14 @@ using System;
 public class SliderController : MonoBehaviour, IInteractable
 {
     public static event Action<int, int> Rotated = delegate { };
-    [SerializeField] private GameObject slider;
-    private bool coroutineAllowed;
     public int numberShown;
-    private AudioSource AS;
+
     [SerializeField] private int sliderId = 0;
-    float totalRotation = 0f;
+
+    private GameObject slider;
+    private bool coroutineAllowed;
+    private float totalRotation = 0f;
+    private AudioSource audioSource;
 
     private void Awake() {
         slider = this.gameObject;
@@ -21,24 +23,23 @@ public class SliderController : MonoBehaviour, IInteractable
     {
         coroutineAllowed = true;
         numberShown = 1;
-
-        AS = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void Interact()
     {
         if (coroutineAllowed)
         {
-            // PlaySound();
+            PlaySound();
             StartCoroutine(RotateSlider());
         }
     }
 
     void PlaySound()
     {
-        AS.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
-        AS.volume = UnityEngine.Random.Range(0.8f, 1.0f);
-        AS.Play();
+        audioSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+        audioSource.volume = UnityEngine.Random.Range(0.8f, 1.0f);
+        audioSource.Play();
     }
 
     private IEnumerator RotateSlider()

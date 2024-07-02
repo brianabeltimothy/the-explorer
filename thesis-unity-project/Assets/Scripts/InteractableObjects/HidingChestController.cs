@@ -19,12 +19,14 @@ public class HidingChestController : MonoBehaviour, IInteractable
 
     private Player player;
     private PlayerController playerController;
+    private AudioSource audioSource;
 
     private void Awake() {
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider>();
         player = playerTransform.GetComponent<Player>();
         playerController = playerTransform.GetComponent<PlayerController>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void Interact()
@@ -130,6 +132,9 @@ public class HidingChestController : MonoBehaviour, IInteractable
 
     private void OpenDoor()
     {
+        audioSource.pitch = Random.Range(0.9f, 1.1f);
+        audioSource.volume = Random.Range(0.8f, 1.0f);
+        audioSource.Play();
         isOpen = true;
         isAnimating = true;
         animator.ResetTrigger("Open");
@@ -138,6 +143,9 @@ public class HidingChestController : MonoBehaviour, IInteractable
 
     private void CloseDoor()
     {
+        audioSource.pitch = Random.Range(0.9f, 1.1f);
+        audioSource.volume = Random.Range(0.8f, 1.0f);
+        audioSource.Play();
         isOpen = false;
         isAnimating = true;
         animator.ResetTrigger("Close");

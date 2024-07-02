@@ -7,12 +7,14 @@ public class PuzzleManager : MonoBehaviour
 {
     private int[] result, correctCombination;
     [SerializeField] private GameObject stoneCover;
+    private AudioSource audioSource;
 
     private void Start()
     {
         result = new int[]{1, 1, 1, 1};
         correctCombination = new int[] {1, 5, 3, 4};
         SliderController.Rotated += CheckResults;
+        audioSource = stoneCover.GetComponent<AudioSource>();
     }
 
     private void CheckResults(int wheelId, int numberShown)
@@ -38,20 +40,21 @@ public class PuzzleManager : MonoBehaviour
             result[2] == correctCombination[2] &&
             result[3] == correctCombination[3]) 
         {
-            // StartOpenDoorEvent();
             StartCoroutine(OpenStoneCoroutine());
         }
     }
 
     private IEnumerator OpenStoneCoroutine()
     {
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.5f);
 
         float elapsedTime = 0f;
         float transitionDuration = 2.0f;
 
         Vector3 stoneCoverInitialPos = stoneCover.transform.position;
         Vector3 stoneCoverTargetPos = new Vector3(stoneCover.transform.position.x + 1, stoneCover.transform.position.y, stoneCover.transform.position.z);
+        
+        audioSource.Play();
 
         while (elapsedTime < transitionDuration)
         {

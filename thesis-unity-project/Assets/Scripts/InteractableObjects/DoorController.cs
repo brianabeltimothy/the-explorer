@@ -5,17 +5,22 @@ using UnityEngine;
 public class DoorController : MonoBehaviour, IInteractable
 {
     public bool isOpen = false;
-    private bool isAnimating = false; // Flag to track if an animation is in progress
+    private bool isMoving = false;
     private Animator animator;
+    private AudioSource audioSource;
+
+    [SerializeField] private float xTarget; 
+    [SerializeField] private float yTarget; 
+    [SerializeField] private float zTarget; 
 
     private void Awake() {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void Interact()
     {
-        // Prevent interaction if an animation is currently in progress
-        if (isAnimating) return;
+        if (isMoving) return;
 
         if (isOpen)
         {
@@ -30,21 +35,58 @@ public class DoorController : MonoBehaviour, IInteractable
     public void OpenDoor()
     {
         isOpen = true;
-        isAnimating = true;
-        animator.ResetTrigger("Open");
-        animator.SetTrigger("Open");
+        StartCoroutine(OpenDoorCoroutine());
+        audioSource.pitch = Random.Range(0.9f, 1.1f);
+        audioSource.volume = Random.Range(0.8f, 1.0f);
+        audioSource.Play();
     }
 
     public void CloseDoor()
     {
         isOpen = false;
-        isAnimating = true;
-        animator.ResetTrigger("Close");
-        animator.SetTrigger("Close");
+        StartCoroutine(CloseDoorCoroutine());
+        audioSource.pitch = Random.Range(0.9f, 1.1f);
+        audioSource.volume = Random.Range(0.8f, 1.0f);
+        audioSource.Play();
     }
 
-    public void OnAnimationComplete()
+    IEnumerator OpenDoorCoroutine()
     {
-        isAnimating = false;
+        isMoving = true;
+        Vector3 startPosition = this.transform.position;
+        Vector3 targetPosition = new Vector3 (this.transform.position.x + xTarget, this.transform.position.y + yTarget, this.transform.position.z + zTarget);
+        float elapsedTime = 0f;
+        float duration = 0.85f;
+
+        while (elapsedTime < duration)
+        {
+            float t = elapsedTime / duration;
+            this.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        this.transform.position = targetPosition;
+        isMoving = false;
+    }
+
+    IEnumerator CloseDoorCoroutine()
+    {
+        isMoving = true;
+        Vector3 startPosition = this.transform.position;
+        Vector3 targetPosition = new Vector3 (this.transform.position.x - xTarget, this.transform.position.y - yTarget, this.transform.position.z - zTarget);
+        float elapsedTime = 0f;
+        float duration = 0.85f;
+
+        while (elapsedTime < duration)
+        {
+            float t = elapsedTime / duration;
+            this.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        this.transform.position = targetPosition;
+        isMoving = false;
     }
 }
