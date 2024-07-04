@@ -94,7 +94,7 @@ public class InputManager : MonoBehaviour
     }
     private void onPause(InputAction.CallbackContext context)
     {
-        Flashlight = context.ReadValueAsButton();
+        Pause = context.ReadValueAsButton();
     }
 
 

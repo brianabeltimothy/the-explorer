@@ -9,17 +9,20 @@ interface IInteractable
 
 public class Interactor : MonoBehaviour
 {
-    // [SerializeField] private Material highlightMaterial;
-
-    // [SerializeField] private Material defaultMaterial;
     private Transform selectedObject;
     private InputManager inputManager;
     private Transform interactorSource;
     [SerializeField] private float interactRange;
+    private AudioSource audioSource;
+
+    private void Awake() 
+    {
+        inputManager = FindObjectOfType<InputManager>();
+        audioSource = GetComponent<AudioSource>();
+    }
 
     void Start()
     {
-        inputManager = FindObjectOfType<InputManager>();
         interactorSource = this.gameObject.transform;
     }
 
@@ -46,6 +49,11 @@ public class Interactor : MonoBehaviour
                 {
                     interactObj.Interact();
                     UIManager.Instance.DisableInteractText();
+                    ItemController itemController = hitInfo.collider.gameObject.GetComponent<ItemController>();
+                    if (itemController != null)
+                    {
+                        audioSource.Play();
+                    }
                 }
             }
         }
