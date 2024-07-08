@@ -8,6 +8,7 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
     private InputManager inputManager;
+    private bool inventoryIsOpened = false;
 
     [SerializeField] private GameObject canvasBackground;
     [SerializeField] private GameObject inventoryObject;
@@ -15,8 +16,6 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private Transform keyItemContent;
     [SerializeField] private Transform artifactContent;
 
-
-    private bool inventoryIsOpened = false;
     [SerializeField] private List<Item> keyItems = new List<Item>();
     [SerializeField] private List<Item> artifactItems = new List<Item>();
     [SerializeField] public List<Item> notes = new List<Item>();
