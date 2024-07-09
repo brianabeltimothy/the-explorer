@@ -34,10 +34,6 @@ public class PauseManager : MonoBehaviour
             {
                 PauseGame();
             }
-            else
-            {
-                ContinueGame();
-            }
         }
     }
 

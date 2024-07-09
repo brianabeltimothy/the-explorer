@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public float fadeSpeed = 1.0f;
     public int maxHits = 4;
 
-    [SerializeField] private int currentHits = 0; 
+    [SerializeField] public int currentHits = 0; 
     [SerializeField] private float cooldownTimer = 0.0f;
     [SerializeField] private bool isCoolingDown = false;
 
@@ -18,11 +18,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        // if(currentHits == maxHits)
-        // {
-        //     Debug.Log("player dies");
-        // }
-
         if (isCoolingDown)
         {
             cooldownTimer -= Time.deltaTime;

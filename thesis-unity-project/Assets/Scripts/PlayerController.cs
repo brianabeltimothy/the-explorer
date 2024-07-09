@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform cam;
     [SerializeField] private float upperLimit = -40f;
     [SerializeField] private float bottomLimit = 70f;
-    [SerializeField] private float mouseSensitivity = 5;
+    [SerializeField] public float mouseSensitivity = 5;
     [SerializeField] private GameObject flashlight;
     
     [Header("Step Sound Manager")]

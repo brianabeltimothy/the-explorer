@@ -4,14 +4,28 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    void Start()
+    private UIManager uiManager;
+    private Player player;
+    
+    private void Awake() 
+    {
+        uiManager = FindAnyObjectByType<UIManager>();
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        player = playerObject.GetComponent<Player>();
+    }
+
+    private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    void Update()
+    private void Update()
     {
-        
+        if(player.currentHits == player.maxHits)
+        {
+            Debug.Log("player dies");
+            StartCoroutine(uiManager.ShowGameOverScreen());
+        }
     }
 }
