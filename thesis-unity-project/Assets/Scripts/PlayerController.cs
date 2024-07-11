@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private float stepTimer;
     
     public bool canMove = true;
+    public bool canMoveCam = true;
 
     private CapsuleCollider capsuleCollider;
     private Rigidbody playerRb;
@@ -76,7 +77,10 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate() 
     {
-        CameraMovement();
+        if(canMoveCam)
+        {
+           CameraMovement();
+        }
     }
     
     private void HandleCrouch()

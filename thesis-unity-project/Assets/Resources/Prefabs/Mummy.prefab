@@ -96,15 +96,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f863c961eb61eb24cb86d8967a2f527a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.80442
+      value: -44.61
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f863c961eb61eb24cb86d8967a2f527a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0819788
+      value: 5.12
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f863c961eb61eb24cb86d8967a2f527a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 29.894247
+      value: 25.95
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f863c961eb61eb24cb86d8967a2f527a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1726,7 +1726,7 @@ MonoBehaviour:
   player: {fileID: 0}
   playerScript: {fileID: 0}
   walkSpeed: 0.05
-  chaseSpeed: 3.5
+  chaseSpeed: 2.7
   minIdleTime: 0
   maxIdleTime: 10
   raycastSource: {fileID: 2237805185398837622}
