@@ -26,18 +26,15 @@ public class PauseManager : MonoBehaviour
         resumeButton.onClick.AddListener(ContinueGame);
     }
 
-    private void Update()
-    {
-        if(inputManager.Pause)
-        {
-            if (!IsPaused)
-            {
-                PauseGame();
-            }
-        }
-    }
+    // private void Update()
+    // {
+    //     if(inputManager.Pause)
+    //     {
+    //         PauseGame();
+    //     }
+    // }
 
-    private void PauseGame()
+    public void PauseGame()
     {
         IsPaused = true;
         canvasBackground.SetActive(true);
@@ -62,6 +59,8 @@ public class PauseManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked; // Lock cursor
         Cursor.visible = false;
         EventSystem.current.SetSelectedGameObject(null);
+
+        MenuManager.Instance.menuIsOpen = false;
     }
 
     public void Options()

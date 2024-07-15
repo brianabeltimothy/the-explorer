@@ -5,15 +5,15 @@ using UnityEngine;
 public class Puzzle2Manager : MonoBehaviour, IInteractable
 {
     [SerializeField] private GameObject camPos;
-    // private AudioSource audioSource;
+    private AudioSource audioSource;
 
     private GameObject playerObject;
     private PlayerController playerController;
+    private Player player;
     private GameObject cam;
     private BoxCollider boxCollider;
     private Vector3 initialPos;
     private Quaternion initialRot;
-    private bool isInteracting = false;
     private Animator animator;
 
     
@@ -24,13 +24,14 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
         cam = GameObject.FindGameObjectWithTag("MainCamera"); 
         playerObject = GameObject.FindGameObjectWithTag("Player"); 
         playerController = playerObject.GetComponent<PlayerController>();
+        player = playerObject.GetComponent<Player>();
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
     {
-        // audioSource = stoneCover.GetComponent<AudioSource>();
         result = new int[]{1, 1, 1};
         correctCombination = new int[] {1, 2, 3};
         Puzzle2Piece.Rotated += CheckResults;
@@ -38,10 +39,10 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
 
     private void Update() 
     {
-        if(isInteracting && Input.GetKeyDown(KeyCode.Q))
+        if(Input.GetKeyDown(KeyCode.Q))
         {
             ExitInteracting();
-        }
+        }    
     }
 
     public void Interact()
@@ -51,21 +52,12 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
 
     private IEnumerator Interacting()
     {
-        //lock player movement
-        //lock camera movement
-        //disable collider
-        //move camera 
-        //make cursor visible
-        //unlock the cursor
-        isInteracting = true;
         initialPos = cam.transform.position;
         initialRot = cam.transform.rotation;
         playerController.canMove = false;
         playerController.canMoveCam = false;
         boxCollider.enabled = false;
         yield return StartCoroutine(MoveToPositionAndRotation(camPos.transform.position, camPos.transform.rotation, 2f));
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
 
         //display instruction
     }
@@ -80,7 +72,7 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
 
         cam.transform.position = initialPos;
         cam.transform.rotation = initialRot;
-        isInteracting = false;
+        player.isInteracting = false;
     }
 
     private IEnumerator MoveToPositionAndRotation(Vector3 targetPosition, Quaternion targetRotation, float duration)
@@ -100,6 +92,8 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
 
         cam.transform.position = targetPosition;
         cam.transform.rotation = targetRotation;
+
+        player.isInteracting = true;
     }
 
     private void CheckResults(int pieceId, int numberShown)
@@ -124,7 +118,7 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
             ExitInteracting();
             boxCollider.enabled = false;
             animator.SetTrigger("Open");
-            //play sound
+            audioSource.Play();
         }
     }
 

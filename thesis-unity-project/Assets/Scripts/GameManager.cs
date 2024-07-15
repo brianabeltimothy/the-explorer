@@ -27,5 +27,11 @@ public class GameManager : MonoBehaviour
             Debug.Log("player dies");
             StartCoroutine(uiManager.ShowGameOverScreen());
         }
+
+        if(player.isInteracting)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 }

@@ -8,7 +8,7 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
     private InputManager inputManager;
-    private bool inventoryIsOpened = false;
+    public bool inventoryIsOpened = false;
 
     [SerializeField] private GameObject canvasBackground;
     [SerializeField] private GameObject inventoryObject;
@@ -25,22 +25,22 @@ public class InventoryManager : MonoBehaviour
         inputManager = FindAnyObjectByType<InputManager>();
     }
 
-    private void Update()
-    {
-        if(inputManager.Inventory)
-        {
-            if (!inventoryIsOpened)
-            {
-                OpenInventory();
-            }
-            else
-            {
-                CloseInventory();
-            }
-        }
-    }
+    // private void Update()
+    // {
+    //     if(inputManager.Inventory)
+    //     {
+    //         if (!inventoryIsOpened)
+    //         {
+    //             OpenInventory();
+    //         }
+    //         else
+    //         {
+    //             CloseInventory();
+    //         }
+    //     }
+    // }
 
-    private void OpenInventory()
+    public void OpenInventory()
     {
         Time.timeScale = 0; // Pause
         Cursor.lockState = CursorLockMode.None; // Unlock cursor
@@ -54,7 +54,7 @@ public class InventoryManager : MonoBehaviour
         ListItems();
     }
 
-    private void CloseInventory()
+    public void CloseInventory()
     {
         Time.timeScale = 1; // Resume game
         Cursor.lockState = CursorLockMode.Locked; // Lock cursor

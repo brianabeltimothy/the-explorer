@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     [SerializeField] private bool isCoolingDown = false;
 
     public bool isHiding = false;
+    public bool isInteracting = false;
 
     void Update()
     {
