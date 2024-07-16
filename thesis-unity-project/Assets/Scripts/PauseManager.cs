@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
 public class PauseManager : MonoBehaviour
 {
     private InputManager inputManager;
-    private bool IsPaused = false;
 
     [SerializeField] private GameObject pause;
     [SerializeField] private GameObject pauseMenu;
@@ -26,38 +25,24 @@ public class PauseManager : MonoBehaviour
         resumeButton.onClick.AddListener(ContinueGame);
     }
 
-    // private void Update()
-    // {
-    //     if(inputManager.Pause)
-    //     {
-    //         PauseGame();
-    //     }
-    // }
-
     public void PauseGame()
     {
-        IsPaused = true;
         canvasBackground.SetActive(true);
 
         pause.SetActive(true);
         pauseMenu.SetActive(true);
         optionsMenu.SetActive(false);
         Time.timeScale = 0; // Pause
-        Cursor.lockState = CursorLockMode.None; // Unlock cursor
-        Cursor.visible = true;
     }
 
     public void ContinueGame()
     {
-        IsPaused = false;
         canvasBackground.SetActive(false);
 
         pause.SetActive(false);
         pauseMenu.SetActive(false);
         optionsMenu.SetActive(false);
         Time.timeScale = 1; // Resume game
-        Cursor.lockState = CursorLockMode.Locked; // Lock cursor
-        Cursor.visible = false;
         EventSystem.current.SetSelectedGameObject(null);
 
         MenuManager.Instance.menuIsOpen = false;

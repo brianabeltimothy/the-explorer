@@ -39,5 +39,16 @@ public class MenuManager : MonoBehaviour
             pauseManager.PauseGame();
             menuIsOpen = true;
         }
+
+        if(menuIsOpen)
+        {
+            Cursor.lockState = CursorLockMode.None; // Unlock cursor
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked; // Lock cursor
+            Cursor.visible = false;
+        }
     }
 }

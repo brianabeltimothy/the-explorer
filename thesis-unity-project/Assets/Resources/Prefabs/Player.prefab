@@ -657,6 +657,7 @@ MonoBehaviour:
   walkStepSoundInterval: 0.6
   runStepSoundInterval: 0.485
   canMove: 1
+  canMoveCam: 1
 --- !u!114 &7111104109677186846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,6 +678,7 @@ MonoBehaviour:
   cooldownTimer: 0
   isCoolingDown: 0
   isHiding: 0
+  isInteracting: 0
 --- !u!82 &4838196404178971223
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1788,7 +1790,7 @@ Transform:
   m_GameObject: {fileID: 5378648915416796274}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.000000014901161, y: 1.65, z: 0.02}
+  m_LocalPosition: {x: 0, y: 1.65, z: 0.068}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1878,7 +1880,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: dca2d4abbddb7b54aa69a9f3b0c00bca, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -2530,7 +2532,7 @@ Transform:
   m_GameObject: {fileID: 7704238654535599330}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.14}
+  m_LocalPosition: {x: 0, y: 0.03, z: 0.14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

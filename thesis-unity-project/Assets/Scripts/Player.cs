@@ -5,19 +5,18 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    public Transform savePoint;
     public Image damageImage;
     public float cooldownTime = 2.0f;
     public float fadeSpeed = 1.0f;
     public int maxHits = 4;
-
-    [SerializeField] public int currentHits = 0; 
-    [SerializeField] private float cooldownTimer = 0.0f;
-    [SerializeField] private bool isCoolingDown = false;
-
     public bool isHiding = false;
     public bool isInteracting = false;
+    public int currentHits = 0; 
+    public float cooldownTimer = 0.0f;
+    [SerializeField] private bool isCoolingDown = false;
 
-    void Update()
+    private void Update()
     {
         if (isCoolingDown)
         {

@@ -25,26 +25,9 @@ public class InventoryManager : MonoBehaviour
         inputManager = FindAnyObjectByType<InputManager>();
     }
 
-    // private void Update()
-    // {
-    //     if(inputManager.Inventory)
-    //     {
-    //         if (!inventoryIsOpened)
-    //         {
-    //             OpenInventory();
-    //         }
-    //         else
-    //         {
-    //             CloseInventory();
-    //         }
-    //     }
-    // }
-
     public void OpenInventory()
     {
         Time.timeScale = 0; // Pause
-        Cursor.lockState = CursorLockMode.None; // Unlock cursor
-        Cursor.visible = true;
         
         canvasBackground.SetActive(true);
         inventoryObject.SetActive(true);
@@ -57,8 +40,6 @@ public class InventoryManager : MonoBehaviour
     public void CloseInventory()
     {
         Time.timeScale = 1; // Resume game
-        Cursor.lockState = CursorLockMode.Locked; // Lock cursor
-        Cursor.visible = false;
 
         canvasBackground.SetActive(false);
         inventoryObject.SetActive(false);

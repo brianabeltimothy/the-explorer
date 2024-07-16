@@ -15,6 +15,7 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
     private Vector3 initialPos;
     private Quaternion initialRot;
     private Animator animator;
+    private string instructionText = "Press [Q] to exit";
 
     
     private int[] result, correctCombination;
@@ -60,6 +61,7 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
         yield return StartCoroutine(MoveToPositionAndRotation(camPos.transform.position, camPos.transform.rotation, 2f));
 
         //display instruction
+        UIManager.Instance.ChangeInstructionText(instructionText);
     }
 
     private void ExitInteracting()
@@ -73,6 +75,8 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
         cam.transform.position = initialPos;
         cam.transform.rotation = initialRot;
         player.isInteracting = false;
+        
+        UIManager.Instance.ChangeInstructionText("");
     }
 
     private IEnumerator MoveToPositionAndRotation(Vector3 targetPosition, Quaternion targetRotation, float duration)
