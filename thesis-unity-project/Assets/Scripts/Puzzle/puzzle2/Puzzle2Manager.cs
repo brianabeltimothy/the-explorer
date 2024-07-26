@@ -15,7 +15,7 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
     private Vector3 initialPos;
     private Quaternion initialRot;
     private Animator animator;
-    private string instructionText = "Press [Q] to exit";
+    private string instructionText;
 
     
     private int[] result, correctCombination;
@@ -33,8 +33,9 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
 
     private void Start()
     {
+        instructionText = "Press [Q] to exit";
         result = new int[]{1, 1, 1};
-        correctCombination = new int[] {1, 2, 3};
+        correctCombination = new int[] {5, 1, 4};
         Puzzle2Piece.Rotated += CheckResults;
     }
 
@@ -122,12 +123,16 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
             ExitInteracting();
             boxCollider.enabled = false;
             animator.SetTrigger("Open");
-            audioSource.Play();
         }
+    }
+
+    public void PlaySound()
+    {
+        audioSource.Play();
     }
 
     private void OnDestroy()
     {
-        SliderController.Rotated += CheckResults;
+        Puzzle2Piece.Rotated += CheckResults;
     }
 }

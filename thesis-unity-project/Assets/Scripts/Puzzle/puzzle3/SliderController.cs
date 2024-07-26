@@ -51,7 +51,7 @@ public class SliderController : MonoBehaviour, IInteractable
 
         while (elapsedTime < rotationDuration)
         {
-            slider.transform.rotation *= Quaternion.Euler(0f, 60.0f * Time.deltaTime / rotationDuration, 0f);
+            slider.transform.rotation *= Quaternion.Euler(0f, 0f, 60.0f * Time.deltaTime / rotationDuration);
             totalRotation += 60.0f * Time.deltaTime / rotationDuration;
             elapsedTime += Time.deltaTime;
             yield return null;

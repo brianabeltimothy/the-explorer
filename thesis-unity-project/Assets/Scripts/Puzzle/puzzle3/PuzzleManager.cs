@@ -12,7 +12,7 @@ public class PuzzleManager : MonoBehaviour
     private void Start()
     {
         result = new int[]{1, 1, 1, 1};
-        correctCombination = new int[] {1, 5, 3, 4};
+        correctCombination = new int[] {4, 5, 3, 6};
         SliderController.Rotated += CheckResults;
         audioSource = stoneCover.GetComponent<AudioSource>();
     }
