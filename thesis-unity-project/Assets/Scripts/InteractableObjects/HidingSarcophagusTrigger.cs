@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class HidingSarcophagusTrigger : MonoBehaviour
 {
     [SerializeField] private HidingSarcophagusController hidingSarcophagusController;
-    [SerializeField] private Player player;
+    private Player player;
 
     private void Awake() {
         player = FindObjectOfType<Player>();

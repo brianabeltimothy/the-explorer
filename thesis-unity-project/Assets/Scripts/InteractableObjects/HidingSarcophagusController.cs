@@ -5,7 +5,6 @@ using UnityEngine;
 public class HidingSarcophagusController : MonoBehaviour, IInteractable
 {
     private MummyAI mummyAIScript;
-    [SerializeField] private Transform playerTransform;
     [SerializeField] private Transform targetTransform;
     [SerializeField] private Transform initialTransform;
     [SerializeField] private float duration = 1.0f;
@@ -20,10 +19,12 @@ public class HidingSarcophagusController : MonoBehaviour, IInteractable
 
     private Player player;
     private PlayerController playerController;
+    private Transform playerTransform;
 
     private void Awake() {
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider>();
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         player = playerTransform.GetComponent<Player>();
         playerController = playerTransform.GetComponent<PlayerController>();
         audioSource = GetComponent<AudioSource>();
