@@ -5,6 +5,8 @@ using UnityEngine;
 public class HidingChestController : MonoBehaviour, IInteractable
 {
     private MummyAI mummyAIScript;
+    [SerializeField] private GameObject camPos;
+    [SerializeField] private GameObject playerBodyMesh;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Transform targetTransform;
     [SerializeField] private Transform initialTransform;
@@ -15,10 +17,14 @@ public class HidingChestController : MonoBehaviour, IInteractable
     public bool isOpen = false;
     private bool isAnimating = false;
     private Animator animator;
+    private Animator playerAnimator;
     private bool isMoving = false;
 
     private Player player;
     private PlayerController playerController;
+    private CapsuleCollider playerCollider;
+    private Vector3 colliderCenter = new Vector3(0, 0.53f, 0);
+    private float colliderHeight = 1.0f;
     private AudioSource audioSource;
 
     private void Awake() {
@@ -26,6 +32,8 @@ public class HidingChestController : MonoBehaviour, IInteractable
         boxCollider = GetComponent<BoxCollider>();
         player = playerTransform.GetComponent<Player>();
         playerController = playerTransform.GetComponent<PlayerController>();
+        playerAnimator = player.GetComponent<Animator>();
+        playerCollider = player.GetComponent<CapsuleCollider>();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -56,6 +64,7 @@ public class HidingChestController : MonoBehaviour, IInteractable
     {
         if (!isMoving)
         {
+            playerBodyMesh.SetActive(true);
             StartCoroutine(OutCoroutine(duration));
             player.isHiding = false;
             playerController.canMove = true;
@@ -67,7 +76,12 @@ public class HidingChestController : MonoBehaviour, IInteractable
         boxCollider.enabled = false;
         OpenDoor();
         yield return new WaitUntil(() => !isAnimating);
-        yield return StartCoroutine(MoveToPosition(targetPosition, duration));
+        yield return StartCoroutine(MoveToPosition(playerTransform, targetPosition, duration));
+        playerAnimator.SetTrigger("Crouch");
+        playerCollider.center = colliderCenter;
+        playerCollider.height = colliderHeight;
+        playerBodyMesh.SetActive(false);
+        yield return StartCoroutine(MoveToPosition(camPos.transform, targetPosition, duration));
         CloseDoor();
         boxCollider.enabled = true;
     }
@@ -77,6 +91,7 @@ public class HidingChestController : MonoBehaviour, IInteractable
         boxCollider.enabled = false;
         OpenDoor();
         yield return new WaitUntil(() => !isAnimating);
+        playerAnimator.ResetTrigger("Crouch");
         yield return StartCoroutine(MoveUpAndOut(duration));
         CloseDoor();
         boxCollider.enabled = true;
@@ -112,21 +127,21 @@ public class HidingChestController : MonoBehaviour, IInteractable
         isMoving = false;
     }
 
-    private IEnumerator MoveToPosition(Vector3 targetPosition, float duration)
+    private IEnumerator MoveToPosition(Transform objectTransform, Vector3 targetPosition, float duration)
     {
         isMoving = true;
-        Vector3 startPosition = playerTransform.position;
+        Vector3 startPosition = objectTransform.position;
         float elapsedTime = 0f;
 
         while (elapsedTime < duration)
         {
             float t = elapsedTime / duration;
-            playerTransform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            objectTransform.position = Vector3.Lerp(startPosition, targetPosition, t);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        playerTransform.position = targetPosition;
+        objectTransform.position = targetPosition;
         isMoving = false;
     }
 

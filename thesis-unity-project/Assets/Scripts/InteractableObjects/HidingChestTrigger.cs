@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class HidingChestTrigger : MonoBehaviour
 {
     [SerializeField] private HidingChestController hidingChestController;
-    [SerializeField] private Player player;
+    private Player player;
 
     private void Awake() {
         player = FindObjectOfType<Player>();

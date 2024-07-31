@@ -28,18 +28,14 @@ public class PlayerController : MonoBehaviour
     private bool hasAnimator;
     private int xVelHash;
     private int yVelHash;
-    private int zVelHash;
-    private int jumpHash;
-    private int fallingHash;
-    private int groundedHash;
     private int crouchHash;
     private float xRotation; 
     private const float walkSpeedAnim = 2f;
     private const float runSpeedAnim = 4f;
-    private float crouchHeight = 1.6f;
-    private float standingHeight = 1.79f;
-    private Vector3 crouchCenterOffset = new Vector3(0f, 0.76f, 0f);
-    private Vector3 standingCenterOffset = new Vector3(0f, 0.89f, 0f);
+    [SerializeField] private float crouchHeight = 1.55f;
+    [SerializeField] private float standingHeight = 1.79f;
+    [SerializeField] private Vector3 crouchCenterOffset = new Vector3(0f, 0.76f, 0.17f);
+    [SerializeField] private Vector3 standingCenterOffset = new Vector3(0f, 0.89f, 0.17f);
     private bool flashlightIsOn = false;
 
     private void Awake() 
@@ -54,10 +50,6 @@ public class PlayerController : MonoBehaviour
     private void Start() {
         xVelHash = Animator.StringToHash("X_Velocity");
         yVelHash = Animator.StringToHash("Y_Velocity");
-        zVelHash = Animator.StringToHash("Z_Velocity");
-        jumpHash = Animator.StringToHash("Jump");
-        fallingHash = Animator.StringToHash("Falling");
-        groundedHash = Animator.StringToHash("Grounded");
         crouchHash = Animator.StringToHash("Crouch");
     }
 
