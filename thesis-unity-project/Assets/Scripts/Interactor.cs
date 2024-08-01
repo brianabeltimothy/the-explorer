@@ -50,7 +50,8 @@ public class Interactor : MonoBehaviour
                     interactObj.Interact();
                     UIManager.Instance.DisableInteractText();
                     ItemController itemController = hitInfo.collider.gameObject.GetComponent<ItemController>();
-                    if (itemController != null)
+                    DoorKeyController doorKeyController = hitInfo.collider.gameObject.GetComponent<DoorKeyController>();
+                    if (itemController != null|| doorKeyController != null)
                     {
                         audioSource.Play();
                     }

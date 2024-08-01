@@ -14,7 +14,9 @@ public class Player : MonoBehaviour
     public bool isInteracting = false;
     public int currentHits = 0; 
     public float cooldownTimer = 0.0f;
-    [SerializeField] private bool isCoolingDown = false;
+    public bool hasDoorKey = false;
+    
+    private bool isCoolingDown = false;
 
     private void Update()
     {

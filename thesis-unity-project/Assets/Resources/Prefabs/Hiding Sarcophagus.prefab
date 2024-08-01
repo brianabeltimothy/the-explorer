@@ -67,7 +67,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hidingSarcophagusController: {fileID: 6885368178977753828}
-  player: {fileID: 0}
 --- !u!1 &3295208011977753710
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,7 +160,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 4609665969415131677, guid: 6f7778bd622425a42825d91cf891af89, type: 3}
+  - {fileID: 2100000, guid: 9e4da91da717d9b4d92fdc6fc728a223, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -267,7 +266,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2483980608260600912, guid: 6f7778bd622425a42825d91cf891af89, type: 3}
+  - {fileID: 2100000, guid: 4972f1a2c08ec424cbbfecede3e22a46, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
