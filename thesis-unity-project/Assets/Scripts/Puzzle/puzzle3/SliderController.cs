@@ -14,6 +14,7 @@ public class SliderController : MonoBehaviour, IInteractable
     private bool coroutineAllowed;
     private float totalRotation = 0f;
     private AudioSource audioSource;
+    private string instruction = "[E] <br> Rotate";
 
     private void Awake() {
         slider = this.gameObject;
@@ -33,6 +34,11 @@ public class SliderController : MonoBehaviour, IInteractable
             PlaySound();
             StartCoroutine(RotateSlider());
         }
+    }
+
+    public string GivesInstructionText()
+    {
+        return instruction;
     }
 
     void PlaySound()

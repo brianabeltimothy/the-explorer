@@ -26,6 +26,7 @@ public class HidingChestController : MonoBehaviour, IInteractable
     private Vector3 colliderCenter = new Vector3(0, 0.53f, 0);
     private float colliderHeight = 1.0f;
     private AudioSource audioSource;
+    private string instruction = "[E] <br> Hide";
 
     private void Awake() {
         animator = GetComponent<Animator>();
@@ -42,11 +43,18 @@ public class HidingChestController : MonoBehaviour, IInteractable
         if (!player.isHiding)
         {
             Hide();
+            instruction = "[E] <br> Get out";
         }
         else
         {
             Out();
+            instruction = "[E] <br> Hide";
         }
+    }
+
+    public string GivesInstructionText()
+    {
+        return instruction;
     }
 
     public void Hide()

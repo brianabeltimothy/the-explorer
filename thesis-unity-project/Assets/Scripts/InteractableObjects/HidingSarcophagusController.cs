@@ -20,6 +20,7 @@ public class HidingSarcophagusController : MonoBehaviour, IInteractable
     private Player player;
     private PlayerController playerController;
     private Transform playerTransform;
+    private string instruction = "[E] <br> Hide";
 
     private void Awake() {
         animator = GetComponent<Animator>();
@@ -30,15 +31,22 @@ public class HidingSarcophagusController : MonoBehaviour, IInteractable
         audioSource = GetComponent<AudioSource>();
     }
 
+    public string GivesInstructionText()
+    {
+        return instruction;
+    }
+
     public void Interact()
     {
         if (!player.isHiding)
         {
             Hide();
+            instruction = "[E] <br> Get out";
         }
         else
         {
             Out();
+            instruction = "[E] <br> Hide";
         }
     }
 

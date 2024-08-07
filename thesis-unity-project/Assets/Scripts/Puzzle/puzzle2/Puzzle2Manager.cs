@@ -16,6 +16,7 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
     private Quaternion initialRot;
     private Animator animator;
     private string instructionText;
+    private string instruction = "[E] <br> Interact";
 
     
     private int[] result, correctCombination;
@@ -45,6 +46,11 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
         {
             ExitInteracting();
         }    
+    }
+    
+    public string GivesInstructionText()
+    {
+        return instruction;
     }
 
     public void Interact()

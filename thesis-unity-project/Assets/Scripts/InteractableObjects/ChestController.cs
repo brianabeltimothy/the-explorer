@@ -7,6 +7,7 @@ public class ChestController : MonoBehaviour, IInteractable
     private Animator animator;
     private BoxCollider boxCollider;
     private AudioSource audioSource;
+    private string instruction = "[E] <br> Open";
 
     private void Awake() {
         animator = GetComponent<Animator>();
@@ -17,6 +18,11 @@ public class ChestController : MonoBehaviour, IInteractable
     public void Interact()
     {
         OpenChest();
+    }
+
+    public string GivesInstructionText()
+    {
+        return instruction;
     }
 
     private void OpenChest()

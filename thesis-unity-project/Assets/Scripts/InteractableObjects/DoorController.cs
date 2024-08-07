@@ -8,6 +8,7 @@ public class DoorController : MonoBehaviour, IInteractable
     private bool isMoving = false;
     private Animator animator;
     private AudioSource audioSource;
+    private string instruction = "[E] <br> Open";
 
     [SerializeField] private float xTarget; 
     [SerializeField] private float yTarget; 
@@ -25,11 +26,18 @@ public class DoorController : MonoBehaviour, IInteractable
         if (isOpen)
         {
             CloseDoor();
+            instruction = "[E] <br> Open";
         }
         else
         {
             OpenDoor();
+            instruction = "[E] <br> Close";
         }
+    }
+
+    public string GivesInstructionText()
+    {
+        return instruction;
     }
 
     public void OpenDoor()

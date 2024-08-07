@@ -10,6 +10,7 @@ public class PuzzleThreeDoor : MonoBehaviour, IInteractable
     private Animator animator;
     private AudioSource audioSource;
     private Player player;
+    private string instruction = "[E] <br> Open";
 
     private bool isLocked = true;
     [SerializeField] private float xTarget; 
@@ -44,12 +45,19 @@ public class PuzzleThreeDoor : MonoBehaviour, IInteractable
             if (isOpen)
             {
                 CloseDoor();
+                instruction = "[E] <br> Open";
             }
             else
             {
                 OpenDoor();
+                instruction = "[E] <br> Close";
             }
         }
+    }
+
+    public string GivesInstructionText()
+    {
+        return instruction;
     }
     
     private IEnumerator UnlockingDoorCoroutine()

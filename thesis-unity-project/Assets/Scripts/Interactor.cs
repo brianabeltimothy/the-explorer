@@ -5,6 +5,7 @@ using UnityEngine;
 interface IInteractable
 {
     public void Interact();
+    public string GivesInstructionText();
 }
 
 public class Interactor : MonoBehaviour
@@ -42,6 +43,8 @@ public class Interactor : MonoBehaviour
             {
                 var selection = hitInfo.transform;
                 UIManager.Instance.EnableInteractText();
+                string instructionText = interactObj.GivesInstructionText();
+                UIManager.Instance.ChangeInteractText(instructionText);
 
                 selectedObject = selection;
 

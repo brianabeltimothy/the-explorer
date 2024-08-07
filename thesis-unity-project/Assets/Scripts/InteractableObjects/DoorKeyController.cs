@@ -5,18 +5,21 @@ using UnityEngine;
 public class DoorKeyController : MonoBehaviour, IInteractable
 {
     private Player player;
-    private AudioSource audioSource;
+    private string instruction = "[E] <br> Collect";
 
     private void Awake() 
     {
         player = FindAnyObjectByType<Player>();
-        audioSource = GetComponent<AudioSource>();
     }
 
     public void Interact()
     {
-        audioSource.Play();
         player.hasDoorKey = true;
         Destroy(gameObject);
+    }
+
+    public string GivesInstructionText()
+    {
+        return instruction;
     }
 }
