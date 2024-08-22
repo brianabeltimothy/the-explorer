@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     public int currentHits = 0; 
     public float cooldownTimer = 0.0f;
     public bool hasDoorKey = false;
+    public bool hasMask = false;
     
     private bool isCoolingDown = false;
 

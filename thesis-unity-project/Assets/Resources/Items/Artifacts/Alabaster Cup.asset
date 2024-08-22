@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 851652fea95e96f4383cff47baf68670, type: 3}
+  m_Name: Alabaster Cup
+  m_EditorClassIdentifier: 
+  id: 2
+  itemName: Alabaster Cup
+  icon: {fileID: -985351707, guid: 8dca074ab2d4f7d45a92c49cc0c13ad7, type: 3}
+  description: "Chalice called Wishing Cup in the shape of a lotus in full  bloom.
+    It\u2019s carved of a single piece of alabaster. Lotus in  Egyptian mythology
+    is significant for the birth of the sun  god. "

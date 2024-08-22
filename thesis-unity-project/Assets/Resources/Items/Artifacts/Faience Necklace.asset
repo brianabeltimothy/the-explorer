@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 851652fea95e96f4383cff47baf68670, type: 3}
+  m_Name: Faience Necklace
+  m_EditorClassIdentifier: 
+  id: 2
+  itemName: Faience Necklace
+  icon: {fileID: -1334354362, guid: 964d98309dbaba24289fc5ebc7834660, type: 3}
+  description: "Faience collar with golden plated elements. Faience was the common
+    material to use but the colors and size of it suggest the wealth of the owner.
+    Seems like his necklace could be made in Amarna period dated for 1346 BC \u2013
+    1336 BC. "

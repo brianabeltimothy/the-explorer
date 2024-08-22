@@ -5,7 +5,7 @@ using UnityEngine;
 public class StepsSoundManager : MonoBehaviour
 {
     [SerializeField] private List<AudioClip> stepSounds;
-    [SerializeField] private AudioSource audioSource;
+    private AudioSource audioSource;
 
     private void Awake() 
     {

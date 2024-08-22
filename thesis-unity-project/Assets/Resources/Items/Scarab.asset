@@ -14,9 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1
   itemName: Scarab
-  icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-    eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat.
+  icon: {fileID: 367434276, guid: e6c14c58bf477514bae2294fac15eb42, type: 3}
+  description: 

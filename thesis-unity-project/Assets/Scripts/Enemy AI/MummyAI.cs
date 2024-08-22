@@ -11,6 +11,7 @@ public class MummyAI : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private Player playerScript;
     [SerializeField] private BoxCollider boxCollider;
+    [SerializeField] private AudioClip chasingMusic;
 
     // Mummy settings
     [Header("Walk Speeds")]
@@ -46,6 +47,7 @@ public class MummyAI : MonoBehaviour
     private bool moveToWaypoint = true;
     private bool isAttacking;
     private InputManager inputManager;
+    private bool isPlayingMusic = false;
 
     public enum EnemyState
     {
@@ -114,6 +116,11 @@ public class MummyAI : MonoBehaviour
 
     void Patrol()
     {
+        if (isPlayingMusic)
+        {
+            MusicManager.Instance.FadeOutAudio();
+            isPlayingMusic = false;
+        }
         Vector3 direction = (player.position - raycastSource.transform.position).normalized;
         float angle = Vector3.Angle(raycastSource.transform.forward, direction);
         float distanceToPlayer = Vector3.Distance(raycastSource.transform.position, player.position);
@@ -164,6 +171,11 @@ public class MummyAI : MonoBehaviour
 
     void Chase()
     {
+        if(!isPlayingMusic)
+        {  
+            MusicManager.Instance.PlayMusic(chasingMusic);
+            isPlayingMusic = true;
+        }
         mummyAnimator.ResetTrigger("Idle");
         mummyAnimator.ResetTrigger("Walk");
         mummyAnimator.ResetTrigger("Attack");

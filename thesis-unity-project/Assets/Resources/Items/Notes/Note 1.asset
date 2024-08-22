@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 851652fea95e96f4383cff47baf68670, type: 3}
+  m_Name: Note 1
+  m_EditorClassIdentifier: 
+  id: 3
+  itemName: Note 1
+  icon: {fileID: 119491962, guid: d1cb967274e192d43a4780478dec57a2, type: 3}
+  description: After years of relentless searching, I have finally uncovered the
+    lost tomb of Nefertiti and the long-sough Golden Mask. This is an extraordinary
+    treasure! <br><br><br><align=right>- Sir Alex</align>
