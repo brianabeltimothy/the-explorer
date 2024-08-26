@@ -17,6 +17,14 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private Transform artifactContent;
 
     [SerializeField] private List<Item> keyItems = new List<Item>();
+    public List<Item> KeyItems
+    {
+        get 
+        {
+            return keyItems;  // Getter: Returns the list
+        }
+    }
+
     [SerializeField] private List<Item> artifactItems = new List<Item>();
     [SerializeField] public List<Item> notes = new List<Item>();
 
@@ -63,10 +71,10 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // public void Remove(Item item)
-    // {
-    //     keyItems.Remove(item);
-    // }
+    public void RemoveKeyItem(Item item)
+    {
+        keyItems.Remove(item);
+    }
 
     public void ListItems()
     {

@@ -4,15 +4,27 @@ using UnityEngine;
 
 public class InstructionTrigger : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private string InstructionText;
+    [SerializeField] private bool destroyAfterDisplay = false;
+
+    private void OnTriggerEnter(Collider other) 
     {
-        
+        if(other.gameObject.CompareTag("Player"))
+        {
+            StartCoroutine(DisplayInstructionText());
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator DisplayInstructionText()
     {
-        
+        UIManager.Instance.ChangeInstructionText("");
+        UIManager.Instance.ChangeInstructionText(InstructionText);
+        yield return new WaitForSeconds(3f);
+        UIManager.Instance.ChangeInstructionText("");
+
+        if(destroyAfterDisplay)
+        {
+            Destroy(gameObject);
+        }
     }
 }

@@ -27,7 +27,7 @@ public class Mask : MonoBehaviour, IInteractable
     private IEnumerator DisplayInstructionText()
     {
         UIManager.Instance.ChangeInstructionText("");
-        UIManager.Instance.ChangeInstructionText("Here it is. The missing mask that I looked for.");
+        UIManager.Instance.ChangeInstructionText("Here it is. The missing thing that I looked for.");
         yield return new WaitForSeconds(3f);
         UIManager.Instance.ChangeInstructionText("");
     }

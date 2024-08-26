@@ -5,6 +5,7 @@ using UnityEngine;
 public class Puzzle2Manager : MonoBehaviour, IInteractable
 {
     [SerializeField] private GameObject camPos;
+    [SerializeField] private GameObject crosshair;
     private AudioSource audioSource;
 
     private GameObject playerObject;
@@ -60,6 +61,7 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
 
     private IEnumerator Interacting()
     {
+        crosshair.SetActive(false);
         initialPos = cam.transform.position;
         initialRot = cam.transform.rotation;
         playerController.canMove = false;
@@ -73,6 +75,7 @@ public class Puzzle2Manager : MonoBehaviour, IInteractable
 
     private void ExitInteracting()
     {
+        crosshair.SetActive(true);
         playerController.canMove = true;
         playerController.canMoveCam = true;
         boxCollider.enabled = true;

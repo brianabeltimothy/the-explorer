@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class StatueMask : MonoBehaviour, IInteractable
 {
     [SerializeField] private GameObject mask;
     [SerializeField] private Transform targetTransform;
+    [SerializeField] private VideoClip cutscene3;
+    [SerializeField] private GameObject mummy;
+    [SerializeField] private PauseManager pauseManager;
 
     private Player player;
     private BoxCollider boxCollider;
@@ -23,7 +27,6 @@ public class StatueMask : MonoBehaviour, IInteractable
         if (player.hasMask)
         {
             instruction = "[E] <br> Put mask";
-            //game over
         }
     }
 
@@ -32,7 +35,6 @@ public class StatueMask : MonoBehaviour, IInteractable
         if (player.hasMask)
         {
             StartCoroutine(PutMask());
-            //game over
         }
         else
         {
@@ -59,6 +61,14 @@ public class StatueMask : MonoBehaviour, IInteractable
         }
 
         mask.transform.position = targetPosition;
+        //game over
+        CutsceneManager.Instance.PlayCutscene(cutscene3, OnCutsceneEnd);
+    }
+
+    private void OnCutsceneEnd()
+    {
+        mummy.SetActive(false);
+        pauseManager.LoadLevelButton("MainMenu");
     }
 
     public string GivesInstructionText()

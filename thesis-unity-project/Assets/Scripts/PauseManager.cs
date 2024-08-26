@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
 {
@@ -14,6 +15,10 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private GameObject canvasBackground;
     [SerializeField] private Button optionButton;
     [SerializeField] private Button resumeButton;
+    
+    [Header("Loading Settings")]
+    [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private Slider loadingSlider;
 
     private void Awake() {
         inputManager = FindAnyObjectByType<InputManager>();
@@ -45,7 +50,7 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1; // Resume game
         EventSystem.current.SetSelectedGameObject(null);
 
-        MenuManager.Instance.menuIsOpen = false;
+        GameManager.Instance.menuIsOpen = false;
     }
 
     public void Options()
@@ -55,8 +60,22 @@ public class PauseManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
     }
 
-    public void MainMenu()
+    public void LoadLevelButton(string levelToLoad)
     {
-        //go to main menu
+        loadingScreen.SetActive(true);
+
+        StartCoroutine(LoadLevelAsync(levelToLoad));
+    }
+
+    private IEnumerator LoadLevelAsync(string levelToLoad)
+    {
+        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(levelToLoad);
+        
+        while (!loadOperation.isDone)
+        {
+            float progressValue = Mathf.Clamp01(loadOperation.progress / 0.9f);
+            loadingSlider.value = progressValue;
+            yield return null;
+        }
     }
 }

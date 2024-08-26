@@ -40,7 +40,7 @@ public class UIManager : MonoBehaviour
     {   
         player.currentHits = 0;
         player.cooldownTimer = 0f;
-        MenuManager.Instance.menuIsOpen = false;
+        GameManager.Instance.menuIsOpen = false;
 
         Color temp = blackScreenImage.color;
         temp.a = 1f;
@@ -95,7 +95,7 @@ public class UIManager : MonoBehaviour
         youDieScreen.SetActive(true);
         yield return FadeToAlpha(blackScreenImage, 0f, 1f);
         blackScreen.SetActive(false);
-        MenuManager.Instance.menuIsOpen = true;
+        GameManager.Instance.menuIsOpen = true;
     }
 
     public IEnumerator BlackScreenFadeInCoroutine(float duration)
